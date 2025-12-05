@@ -1,50 +1,15 @@
 
-        // 저장공간 제한 (GB)
-        const STORAGE_LIMIT = 10; // GB
-        let usedStorage = 0; // GB
         let videos = []; // 저장된 영상 목록
 
         // 로컬 스토리지에서 데이터 로드
         function loadData() {
             const savedVideos = localStorage.getItem('savedVideos');
-            const savedStorage = localStorage.getItem('usedStorage');
             
             if (savedVideos) {
                 videos = JSON.parse(savedVideos);
             }
             
-            if (savedStorage) {
-                usedStorage = parseFloat(savedStorage);
-            }
-            
-            updateStorageDisplay();
             renderVideos();
-        }
-
-        // 저장공간 표시 업데이트
-        function updateStorageDisplay() {
-            const percentage = (usedStorage / STORAGE_LIMIT) * 100;
-            const storageBar = document.getElementById('storage-bar');
-            const usedStorageEl = document.getElementById('used-storage');
-            const totalStorageEl = document.getElementById('total-storage');
-            const usedDetailEl = document.getElementById('used-detail');
-            const remainingDetailEl = document.getElementById('remaining-detail');
-
-            usedStorageEl.textContent = usedStorage.toFixed(2);
-            totalStorageEl.textContent = STORAGE_LIMIT;
-            usedDetailEl.textContent = usedStorage.toFixed(2) + ' GB';
-            remainingDetailEl.textContent = (STORAGE_LIMIT - usedStorage).toFixed(2) + ' GB';
-
-            storageBar.style.width = percentage + '%';
-            
-            // 경고 색상 적용
-            if (percentage >= 90) {
-                storageBar.className = 'storage-bar danger';
-            } else if (percentage >= 70) {
-                storageBar.className = 'storage-bar warning';
-            } else {
-                storageBar.className = 'storage-bar';
-            }
         }
 
         // 영상 목록 렌더링
@@ -211,19 +176,15 @@
             event.stopPropagation(); // 카드 클릭 이벤트 방지
             if (!confirm('정말 이 영상을 삭제하시겠습니까?')) return;
             
-            const video = videos[index];
-            usedStorage -= video.size;
             videos.splice(index, 1);
             
             saveData();
-            updateStorageDisplay();
             renderVideos();
         }
 
         // 데이터 저장
         function saveData() {
             localStorage.setItem('savedVideos', JSON.stringify(videos));
-            localStorage.setItem('usedStorage', usedStorage.toString());
         }
 
         // 필터 버튼 이벤트
@@ -244,7 +205,6 @@
                 if (video.expiryDate) {
                     const expiry = new Date(video.expiryDate);
                     if (expiry <= now) {
-                        usedStorage -= video.size;
                         deleted = true;
                         return false;
                     }
@@ -254,7 +214,6 @@
             
             if (deleted) {
                 saveData();
-                updateStorageDisplay();
                 renderVideos();
             }
         }

@@ -156,237 +156,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const translationModal = document.getElementById('translationModal');
     const modalBackdrop = document.getElementById('modalBackdrop');
     const closeTranslationModal = document.getElementById('closeTranslationModal');
-    const videoPreviewSection = document.getElementById('videoPreviewSection');
-    const videoThumbnail = document.getElementById('videoThumbnail');
-    const thumbnailVideo = document.getElementById('thumbnail-video');
-    const thumbnailCanvas = document.getElementById('thumbnail-canvas');
-    const videoDuration = document.getElementById('videoDuration');
-    const videoTitle = document.getElementById('videoTitle');
     
-    // 전역 변수
-    let currentVideoFile = null;
-    let currentVideoUrl = null;
+    // 클릭으로 업로드
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
     
-    // dropZone이 존재하는지 확인하고 이벤트 리스너 추가
-    if (!dropZone) {
-        console.error('dropZone 요소를 찾을 수 없습니다.');
-    } else {
-        // 클릭으로 업로드 - 드롭존 빈 공간 클릭 시 파일 선택
-        dropZone.addEventListener('click', (e) => {
-            // 링크 입력 필드, 업로드 버튼, 정보 영역을 클릭한 경우는 파일 선택 대화상자 열지 않음
-            const clickedLinkInput = e.target.closest('#linkInput') || e.target.id === 'linkInput';
-            const clickedUploadBtn = e.target.closest('#uploadBtn') || e.target.id === 'uploadBtn' || e.target.closest('.upload-btn');
-            const clickedInfo = e.target.closest('.drop-zone-info') || e.target.closest('.drop-zone-info *');
-            const clickedPlatformLogo = e.target.closest('.platform-logo') || e.target.closest('.platform-logos');
-            
-            // 위 요소들을 클릭하지 않은 경우에만 파일 선택 대화상자 열기
-            if (!clickedLinkInput && !clickedUploadBtn && !clickedInfo && !clickedPlatformLogo) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (fileInput) {
-                    fileInput.click();
-                }
-            }
-        });
+    // 드래그 오버
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+    
+    // 드롭
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
         
-        // 드롭존에 커서 포인터 스타일 추가 (클릭 가능함을 표시)
-        dropZone.style.cursor = 'pointer';
-        
-        // 드래그 앤 드롭 기능 강화
-        let dragCounter = 0;
-        
-        // 드래그 진입
-        dropZone.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dragCounter++;
-            
-            // 파일이 드래그되는 경우에만 스타일 적용
-            if (e.dataTransfer.types.includes('Files')) {
-                dropZone.classList.add('drag-over');
-            }
-        });
-        
-        // 드래그 오버 (드래그 중)
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // 드롭 효과 설정
-            if (e.dataTransfer.types.includes('Files')) {
-                e.dataTransfer.dropEffect = 'copy';
-                dropZone.classList.add('drag-over');
-            } else {
-                e.dataTransfer.dropEffect = 'none';
-            }
-        });
-        
-        // 드래그 리브 (드래그 영역 벗어남)
-        dropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dragCounter--;
-            
-            // 모든 드래그가 끝났을 때만 스타일 제거
-            if (dragCounter === 0) {
-                dropZone.classList.remove('drag-over');
-            }
-        });
-        
-        // 드롭
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dragCounter = 0;
-            dropZone.classList.remove('drag-over');
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                
-                // 여러 파일이 드롭된 경우 경고
-                if (files.length > 1) {
-                    alert('한 번에 하나의 영상 파일만 업로드할 수 있습니다.\n첫 번째 파일만 처리됩니다.');
-                }
-                
-                // 파일 처리 (번역 설정 팝업 자동 표시)
-                handleFile(file);
-            } else {
-                // 파일이 없는 경우 (예: 텍스트 드래그)
-                console.log('드롭된 파일이 없습니다.');
-            }
-        });
-        
-        // 전체 문서에서 드래그가 끝났을 때 스타일 제거 (안전장치)
-        document.addEventListener('dragend', () => {
-            dragCounter = 0;
-            dropZone.classList.remove('drag-over');
-        });
-    }
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
     
     // 파일 선택
-    if (fileInput) {
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
-    }
-    
-    // 지원하는 비디오 파일 확장자
-    const allowedVideoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mpeg', '.mpg', '.mkv', '.flv', '.wmv'];
-    const allowedVideoTypes = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/x-flv', 'video/x-ms-wmv'];
-    
-    // 파일이 비디오인지 확인하는 함수
-    function isValidVideoFile(file) {
-        // MIME 타입 확인
-        if (!file.type || !file.type.startsWith('video/')) {
-            return false;
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
         }
-        
-        // 지원하는 MIME 타입 확인
-        if (!allowedVideoTypes.some(type => file.type.includes(type.split('/')[1]))) {
-            // 확장자로 추가 확인
-            const fileName = file.name.toLowerCase();
-            const hasValidExtension = allowedVideoExtensions.some(ext => fileName.endsWith(ext));
-            if (!hasValidExtension) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+    });
     
-    // 파일 처리 함수
     function handleFile(file) {
-        // 파일 크기 확인 (2GB 제한)
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
-        if (file.size > maxSize) {
-            alert('파일 크기가 2GB를 초과합니다.\n지원 형식: MP4, MOV, AVI 최대 2GB');
-            return;
-        }
-        
-        // 비디오 파일인지 확인
-        if (!isValidVideoFile(file)) {
-            alert('영상 파일만 업로드 가능합니다.\n지원 형식: MP4, MOV, AVI, WEBM, MPEG, MKV, FLV, WMV');
-            return;
-        }
-        
-        // 파일 정보 저장
-        currentVideoFile = file;
-        currentVideoUrl = URL.createObjectURL(file);
-        
-        // 파일 정보 업데이트
-        const fileName = file.name;
-        const fileDate = new Date().toLocaleString('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        });
-        
-        // 비디오 제목 업데이트
-        if (videoTitle) {
-            videoTitle.textContent = fileName.replace(/\.[^/.]+$/, '') + ' ' + fileDate;
-        }
-        
-        // 비디오 썸네일 생성
-        generateVideoThumbnail(currentVideoUrl, file);
-        
-        // 번역 설정 모달 표시 (드래그 앤 드롭 또는 파일 선택 시 자동으로 표시)
-        setTimeout(() => {
+        if (file.type.startsWith('video/')) {
+            // 번역 설정 모달 팝업 표시
             showTranslationModal();
-        }, 300); // 썸네일 생성 후 모달 표시
-    }
-    
-    // 비디오 썸네일 생성 함수
-    function generateVideoThumbnail(videoUrl, file) {
-        if (!videoPreviewSection || !videoThumbnail || !thumbnailVideo || !thumbnailCanvas) {
-            return;
+        } else {
+            alert('영상 파일을 업로드해주세요.');
         }
-        
-        // 비디오 미리보기 섹션 표시
-        videoPreviewSection.style.display = 'block';
-        
-        // 비디오 요소 설정
-        thumbnailVideo.src = videoUrl;
-        thumbnailVideo.load();
-        
-        thumbnailVideo.addEventListener('loadedmetadata', function() {
-            // 비디오 길이 업데이트
-            const duration = thumbnailVideo.duration;
-            if (videoDuration) {
-                const minutes = Math.floor(duration / 60);
-                const seconds = Math.floor(duration % 60);
-                videoDuration.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            // 첫 프레임을 썸네일로 생성
-            thumbnailVideo.currentTime = 0.1; // 0.1초 지점의 프레임 사용
-        });
-        
-        thumbnailVideo.addEventListener('seeked', function() {
-            // Canvas에 비디오 프레임 그리기
-            const ctx = thumbnailCanvas.getContext('2d');
-            thumbnailCanvas.width = thumbnailVideo.videoWidth;
-            thumbnailCanvas.height = thumbnailVideo.videoHeight;
-            ctx.drawImage(thumbnailVideo, 0, 0, thumbnailCanvas.width, thumbnailCanvas.height);
-            
-            // Canvas를 이미지로 변환하여 썸네일 배경으로 설정
-            const thumbnailUrl = thumbnailCanvas.toDataURL('image/jpeg');
-            videoThumbnail.style.backgroundImage = `url(${thumbnailUrl})`;
-            videoThumbnail.style.backgroundSize = 'cover';
-            videoThumbnail.style.backgroundPosition = 'center';
-        });
-        
-        // 에러 처리
-        thumbnailVideo.addEventListener('error', function() {
-            // 비디오 로드 실패 시 기본 그라데이션 유지
-            console.error('비디오 썸네일 생성 실패');
-        });
     }
     
     // 번역 설정 모달 표시 함수
@@ -424,14 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modalBackdrop.addEventListener('click', closeTranslationModalFunc);
     }
     
-    // 비디오 탭 전환
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
     
     // 언어 칩 제거
     const languageChips = document.querySelectorAll('.language-chip');
@@ -535,7 +337,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarItems = document.querySelectorAll('.sidebar-item');
     sidebarItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            e.preventDefault();
+            const page = item.dataset.page;
+            
+            // 마이페이지인 경우 mypage.html로 이동
+            if (page === 'projects') {
+                window.location.href = 'mypage.html';
+                return;
+            }
+            
+            // 다른 페이지는 기본 동작 허용 또는 처리
+            if (item.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
             
             // 모든 아이템에서 active 제거
             sidebarItems.forEach(i => i.classList.remove('active'));
@@ -544,8 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.add('active');
             
             // 페이지 전환 로직 (필요시 구현)
-            const page = item.dataset.page;
             console.log(`${page} 페이지로 이동`);
         });
     });
 });
+

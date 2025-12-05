@@ -22,7 +22,7 @@
     <nav class="glass-nav">
         <div class="nav-content">
             <div class="nav-left">
-                <div class="logo" onclick="location.href='home.html'">AX2</div>
+                <div class="logo" onclick="location.href='mypage.html'">AX2</div>
             </div>
             <div class="nav-right">
                 <div class="plan-info">
@@ -47,8 +47,8 @@
                             <i class="fas fa-home"></i>
                             <span>홈</span>
                         </a>
-                        <a href="mypage.html" class="sidebar-item" data-page="mypage">
-                            <i class="fas fa-user"></i>
+                        <a href="mypage.html" class="sidebar-item" data-page="projects">
+                            <i class="fas fa-folder"></i>
                             <span>마이페이지</span>
                         </a>
                         <a href="#" class="sidebar-item" data-page="history">
@@ -82,129 +82,113 @@
                         <div class="link-input-container">
                             <input type="text" class="link-input" id="linkInput" placeholder="링크 입력 : https://youtube, tiktok, google drive...">
                         </div>
-                        <button class="upload-btn" id="uploadBtn">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>업로드</span>
-                        </button>
                     </div>
                     <div class="drop-zone-info">
                         <i class="fas fa-info-circle"></i>
                         <span>MP4, MOV, AVI 최대 2GB 지원</span>
                     </div>
-                    <input type="file" id="fileInput" accept="video/mp4,video/mpeg,video/quicktime,video/x-msvideo,video/webm" style="display: none;">
-                </div>
-
-                <!-- 영상 플레이어 및 자막 영역 (번역 후) -->
-                <div class="video-player-section" id="videoPlayerSection" style="display: none;">
-                    <div class="video-container-main">
-                        <video id="mainVideoPlayer" controls></video>
-                        <div class="subtitle-overlay-main" id="subtitleOverlayMain">
-                            <div class="subtitle-text-main" id="subtitleTextMain"></div>
-                        </div>
-                    </div>
+                    <input type="file" id="fileInput" accept="video/*" style="display: none;">
                 </div>
 
             </div>
+            </div>
+        </div>
+    </main>
 
-            <!-- 번역 설정 모달 -->
-            <div class="translation-modal" id="translationModal" style="display: none;">
-                <div class="modal-backdrop" id="modalBackdrop"></div>
-                <div class="modal-content-wrapper">
-                    <div class="right-panel" id="rightPanel">
-                        <div class="panel-header">
-                            <h2 class="panel-title">번역 설정</h2>
-                            <button class="modal-close-btn" id="closeTranslationModal">
+    <!-- 번역 설정 모달 -->
+    <div class="translation-modal" id="translationModal" style="display: none;">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-content-wrapper">
+            <div class="right-panel" id="rightPanel">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-cog"></i>
+                        번역 설정
+                    </h2>
+                    <button class="modal-close-btn" id="closeTranslationModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="panel-content">
+                    <!-- Original Language -->
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <i class="fas fa-microphone"></i>
+                            원본 언어
+                        </label>
+                        <div class="select-wrapper">
+                            <select class="glass-select" id="originalLang">
+                                <option value="auto">자동 감지</option>
+                                <option value="en">영어</option>
+                                <option value="es">스페인어</option>
+                                <option value="fr">프랑스어</option>
+                                <option value="de">독일어</option>
+                                <option value="ja">일본어</option>
+                                <option value="ko">한국어</option>
+                                <option value="zh">중국어</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- Target Languages -->
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <i class="fas fa-globe"></i>
+                            대상 언어
+                        </label>
+                        <div class="language-chips" id="languageChips">
+                            <div class="language-chip" data-lang="en">
+                                <span>영어</span>
                                 <i class="fas fa-times"></i>
+                            </div>
+                            <div class="language-chip" data-lang="es">
+                                <span>스페인어</span>
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="language-chip" data-lang="fr">
+                                <span>프랑스어</span>
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <button class="add-language-btn">
+                                <i class="fas fa-plus"></i>
+                                언어 추가
                             </button>
                         </div>
-                        <div class="panel-content">
-                            <!-- Video Preview Section -->
-                            <div class="video-preview-section" id="videoPreviewSection" style="display: none;">
-                                <div class="video-thumbnail-small" id="videoThumbnail">
-                                    <video id="thumbnail-video" style="display: none;"></video>
-                                    <canvas id="thumbnail-canvas" style="display: none;"></canvas>
-                                    <div class="video-thumbnail-overlay">
-                                        <span class="video-duration" id="videoDuration">00:00</span>
-                                    </div>
-                                </div>
-                                <div class="video-info-row">
-                                    <span class="video-title-small" id="videoTitle">영상 파일</span>
-                                </div>
-                            </div>
+                    </div>
 
-                            <!-- Original Language -->
-                            <div class="setting-group">
-                                <label class="setting-label">원본 언어</label>
-                                <div class="select-wrapper">
-                                    <select class="glass-select" id="originalLang">
-                                        <option value="auto">Auto Detect</option>
-                                        <option value="en">영어</option>
-                                        <option value="es">스페인어</option>
-                                        <option value="fr">프랑스어</option>
-                                        <option value="de">독일어</option>
-                                        <option value="ja">일본어</option>
-                                        <option value="ko">한국어</option>
-                                        <option value="zh">중국어</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down select-arrow"></i>
-                                </div>
-                            </div>
-
-                            <!-- Translation Language -->
-                            <div class="setting-group">
-                                <label class="setting-label">번역 언어</label>
-                                <div class="multi-select-wrapper">
-                                    <div class="multi-select-display" id="targetLangDisplay">
-                                        <span class="placeholder-text">언어 선택..</span>
-                                        <i class="fas fa-chevron-down select-arrow"></i>
-                                    </div>
-                                    <div class="multi-select-dropdown" id="targetLangDropdown" style="display: none;">
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-en" value="en" class="lang-checkbox">
-                                            <label for="lang-en">영어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-es" value="es" class="lang-checkbox">
-                                            <label for="lang-es">스페인어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-fr" value="fr" class="lang-checkbox">
-                                            <label for="lang-fr">프랑스어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-de" value="de" class="lang-checkbox">
-                                            <label for="lang-de">독일어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-ja" value="ja" class="lang-checkbox">
-                                            <label for="lang-ja">일본어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-ko" value="ko" class="lang-checkbox">
-                                            <label for="lang-ko">한국어</label>
-                                        </div>
-                                        <div class="multi-select-option">
-                                            <input type="checkbox" id="lang-zh" value="zh" class="lang-checkbox">
-                                            <label for="lang-zh">중국어</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 선택한 언어 태그 표시 영역 -->
-                                <div class="selected-languages-tags" id="selectedLanguagesTags"></div>
-                            </div>
-
-                            <!-- Translate Button -->
-                            <button class="translate-btn-new" id="translateBtn">
-                                <i class="fas fa-check"></i>
-                                <span>번역 및 저장하기</span>
-                            </button>
-                            <p class="usage-info">빠른 생성 사용 시간</p>
+                    <!-- Number of Speakers -->
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <i class="fas fa-users"></i>
+                            화자 수
+                        </label>
+                        <div class="select-wrapper">
+                            <select class="glass-select" id="speakers">
+                                <option value="auto">자동 감지</option>
+                                <option value="1">1명</option>
+                                <option value="2">2명</option>
+                                <option value="3">3명 이상</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
                         </div>
+                    </div>
+
+                    <!-- Translate Now 버튼 -->
+                    <button class="translate-btn" id="translateBtn">
+                        <span>지금 번역하기</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                    <!-- 정보 텍스트 -->
+                    <div class="info-text">
+                        <i class="fas fa-sparkles"></i>
+                        <span>다국어 자막, 몇 초 만에 생성됩니다.</span>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- 언어 선택 모달 -->
     <div class="language-modal" id="languageModal" style="display: none;">
