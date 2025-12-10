@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>실시간 번역·자막 생성 - AX2</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -31,22 +31,29 @@
         <div class="nav-content">
             <div class="nav-left">
                 <div class="logo" onclick="location.href='index.html'">
-                    <img src="AX2_logo.png" alt="AX2" class="logo-img">
+                    <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <button class="service-tab active" onclick="location.href='index.html'">
-                        자동 번역/다국어 자막
-                    </button>
-                    <button class="service-tab" onclick="location.href='live_lecture.html'">
-                        실시간 강의
-                    </button>
+                    <a href="index.html" class="service-tab active">
+                        <span>자동 번역/다국어 자막</span>
+                    </a>
+                    <a href="mypage.html" class="service-tab">
+                        <span>저장공간</span>
+                    </a>
+                    <a href="pricing.html" class="service-tab">
+                        <span>요금제/결제</span>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
+                <a href="live_lecture.html" class="live-lecture-btn" title="실시간 강의">
+                    <i class="fas fa-video"></i>
+                </a>
                 <div class="plan-info">
                     <span class="highlight">Free</span> <span id="remaining-time">0분 남음</span>
                 </div>
                 <a href="login.html" class="login-btn">로그인</a>
+                <a href="signup.html" class="signup-btn">가입하기</a>
             </div>
         </div>
     </nav>
@@ -54,25 +61,6 @@
     <!-- 메인 컨텐츠 -->
     <main class="main-container">
         <div class="content-wrapper">
-            <!-- 왼쪽 사이드바 -->
-            <aside class="sidebar">
-                <div class="sidebar-content">
-                    <div class="sidebar-header">
-                        <h3 class="sidebar-title">자동 번역/다국어 자막</h3>
-                    </div>
-                    <nav class="sidebar-nav">
-                        <a href="index.html" class="sidebar-item active" data-page="home">
-                            <i class="fas fa-home"></i>
-                            <span>홈</span>
-                        </a>
-                        <a href="mypage.html" class="sidebar-item" data-page="mypage">
-                            <i class="fas fa-user"></i>
-                            <span>마이페이지</span>
-                        </a>
-                    </nav>
-                </div>
-            </aside>
-
             <!-- 중앙: 드롭존 및 영상 미리보기 -->
             <div class="left-panel">
                 <!-- 제목 및 부제목 -->
@@ -85,7 +73,7 @@
                 <div class="drop-zone" id="dropZone">
                     <div class="drop-zone-content">
                         <div class="upload-icon-wrapper">
-                            <img src="cloud.png" alt="업로드" class="upload-icon">
+                            <img src="../assets:image/cloud.png" alt="업로드" class="upload-icon">
                         </div>
                         <p class="drop-zone-text">여기로 파일을 드래그하거나 클릭하세요</p>
                         <p class="drop-zone-file-info">MP4, MOV, AVI (최대 2GB)</p>
@@ -170,23 +158,6 @@
                         </div>
                     </div>
 
-                    <!-- Number of Speakers -->
-                    <div class="setting-group">
-                        <label class="setting-label">
-                            <i class="fas fa-users"></i>
-                            화자 수
-                        </label>
-                        <div class="select-wrapper">
-                            <select class="glass-select" id="speakers">
-                                <option value="auto">자동 감지</option>
-                                <option value="1">1명</option>
-                                <option value="2">2명</option>
-                                <option value="3">3명 이상</option>
-                            </select>
-                            <i class="fas fa-chevron-down select-arrow"></i>
-                        </div>
-                    </div>
-
                     <!-- Translate Now 버튼 -->
                     <button class="translate-btn" id="translateBtn">
                         <span>지금 번역하기</span>
@@ -262,31 +233,26 @@
         </div>
     </div>
 
-    <script src="auth-state.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/script.js" defer></script>
     <script>
         // 현재 페이지에 따라 활성 탭 설정
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.service-tab');
             const currentPath = window.location.pathname;
+            const currentPage = currentPath.split('/').pop() || 'index.html';
             
             tabs.forEach(tab => {
-                const href = tab.getAttribute('onclick');
+                const href = tab.getAttribute('href');
                 if (href) {
-                    const url = href.match(/location\.href='([^']+)'/)?.[1];
-                    if (url) {
-                        const tabPath = url.split('/').pop() || 'index.html';
-                        const currentPage = currentPath.split('/').pop() || 'index.html';
-                        
-                        // index.html, mypage.html, edit.html은 모두 첫 번째 탭 활성화
-                        if (tabPath === 'index.html' && 
-                            (currentPage === 'index.html' || currentPage === 'mypage.html' || currentPage === 'edit.html')) {
-                            tab.classList.add('active');
-                        } else if (tabPath === 'live_lecture.html' && currentPage === 'live_lecture.html') {
-                            tab.classList.add('active');
-                        } else {
-                            tab.classList.remove('active');
-                        }
+                    const tabPath = href.split('/').pop() || 'index.html';
+                    
+                    if (tabPath === 'index.html' && currentPage === 'index.html') {
+                        tab.classList.add('active');
+                    } else if (tabPath === 'mypage.html' && currentPage === 'mypage.html') {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
                     }
                 }
             });

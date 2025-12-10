@@ -25,6 +25,7 @@
                 'email-placeholder': '이메일을 입력해 주세요.',
                 'email-error': '올바른 이메일 주소를 입력해주세요.',
                 'continue-btn': '계속',
+                'guest-btn': '게스트',
                 'signup-question': '아직 계정이 없으신가요?',
                 'signup-link': '무료 회원가입',
                 'success-message': '로그인 성공! 마이페이지로 이동합니다...',
@@ -50,6 +51,7 @@
                 'email-placeholder': 'Enter your email',
                 'email-error': 'Please enter a valid email address.',
                 'continue-btn': 'Continue',
+                'guest-btn': 'Guest',
                 'signup-question': "Don't have an account yet?",
                 'signup-link': 'Free Sign Up',
                 'success-message': 'Login successful! Redirecting to mypage...',
@@ -75,6 +77,8 @@
                 'email-placeholder': 'メールアドレスを入力してください',
                 'email-error': '有効なメールアドレスを入力してください。',
                 'continue-btn': '続ける',
+                'continue-btn': '続ける',
+                'guest-btn': 'ゲスト',
                 'signup-question': 'まだアカウントをお持ちでないですか？',
                 'signup-link': '無料会員登録',
                 'success-message': 'ログイン成功！マイページに移動します...',
@@ -100,6 +104,7 @@
                 'email-placeholder': '请输入您的邮箱',
                 'email-error': '请输入有效的邮箱地址。',
                 'continue-btn': '继续',
+                'guest-btn': '访客',
                 'signup-question': '还没有账户？',
                 'signup-link': '免费注册',
                 'success-message': '登录成功！正在跳转到我的页面...',
@@ -445,6 +450,35 @@
                         clearError(this);
                     }
                 });
+            }
+        }
+
+        // 게스트 로그인
+        function loginAsGuest() {
+            try {
+                const guestUser = {
+                    id: 'guest_' + Date.now(),
+                    email: 'guest@ax2.com',
+                    name: '게스트',
+                    isGuest: true,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // 게스트 계정 정보 저장
+                saveLoginState(guestUser);
+                
+                logger.log('게스트 로그인 성공');
+                
+                showSuccessMessage('success-message');
+                
+                setTimeout(() => {
+                    if (!handleRedirectAfterLogin()) {
+                        window.location.href = 'index.html';
+                    }
+                }, 1500);
+            } catch (error) {
+                logger.error('게스트 로그인 오류:', error);
+                alert('게스트 로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
         }
 

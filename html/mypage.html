@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>AX2 마이페이지</title>
-    <link rel="stylesheet" href="mypage.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/mypage.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -22,46 +22,32 @@
         <div class="nav-content">
             <div class="nav-left">
                 <div class="logo" onclick="location.href='index.html'">
-                    <img src="AX2_logo.png" alt="AX2" class="logo-img">
+                    <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <button class="service-tab active" onclick="location.href='index.html'">
-                        자동 번역/다국어 자막
-                    </button>
-                    <button class="service-tab" onclick="location.href='live_lecture.html'">
-                        실시간 강의
-                    </button>
+                    <a href="index.html" class="service-tab">
+                        <span>자동 번역/다국어 자막</span>
+                    </a>
+                    <a href="mypage.html" class="service-tab active">
+                        <span>저장공간</span>
+                    </a>
+                    <a href="pricing.html" class="service-tab">
+                        <span>요금제/결제</span>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
+                <a href="live_lecture.html" class="live-lecture-btn" title="실시간 강의">
+                    <i class="fas fa-video"></i>
+                </a>
                 <div class="plan-info">
                     <span class="highlight">Free</span> <span id="remaining-time">0분 남음</span>
                 </div>
                 <a href="login.html" class="login-btn">로그인</a>
+                <a href="signup.html" class="signup-btn">가입하기</a>
             </div>
         </div>
     </nav>
-
-    <!-- 왼쪽 사이드바 -->
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <div class="sidebar-header">
-                <h3 class="sidebar-title">
-                    <h3 class="sidebar-title">자동 번역/다국어 자막</h3>
-                </h3>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="index.html" class="sidebar-item" data-page="home">
-                    <i class="fas fa-home"></i>
-                    <span>홈</span>
-                </a>
-                <a href="mypage.html" class="sidebar-item active" data-page="mypage">
-                    <i class="fas fa-user"></i>
-                    <span>마이페이지</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
 
     <div class="container">
         <!-- 저장공간 대시보드 -->
@@ -73,7 +59,7 @@
                 </h2>
                 <div class="free-plan-badge">
                     <i class="fas fa-gift"></i>
-                    <span>1시간 무료 강의 제공</span>
+                    <span>1시간 무료 영상 제공</span>
                 </div>
             </div>
             <div class="storage-content">
@@ -100,7 +86,7 @@
                         </div>
                         <div class="stat-content">
                             <div class="stat-value" id="total-videos">0</div>
-                            <div class="stat-label">저장된 강의</div>
+                            <div class="stat-label">저장된 영상</div>
                         </div>
                     </div>
                     <div class="stat-item">
@@ -109,7 +95,7 @@
                         </div>
                         <div class="stat-content">
                             <div class="stat-value" id="total-duration">0분</div>
-                            <div class="stat-label">총 강의 시간</div>
+                            <div class="stat-label">총 영상 시간</div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +105,7 @@
         <!-- 영상 목록 -->
         <div class="videos-section">
             <div class="section-header">
-                <div class="section-title">최근 강의</div>
+                <div class="section-title">최근 영상</div>
                 <div class="filter-controls">
                     <button class="filter-btn active" data-filter="all">전체</button>
                     <button class="filter-btn" data-filter="recent">최근</button>
@@ -136,16 +122,16 @@
     <div class="modal" id="edit-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">강의 편집</div>
+                <div class="modal-title">영상 편집</div>
                 <button class="modal-close" onclick="closeEditModal()">&times;</button>
             </div>
             <div class="form-group">
-                <label class="form-label">강의 제목</label>
-                <input type="text" class="form-input" id="edit-title" placeholder="강의 제목을 입력하세요">
+                <label class="form-label">영상 제목</label>
+                <input type="text" class="form-input" id="edit-title" placeholder="영상 제목을 입력하세요">
             </div>
             <div class="form-group">
                 <label class="form-label">설명</label>
-                <textarea class="form-input" id="edit-description" rows="4" placeholder="강의 설명을 입력하세요"></textarea>
+                <textarea class="form-input" id="edit-description" rows="4" placeholder="영상 설명을 입력하세요"></textarea>
             </div>
             <div class="form-group">
                 <label class="form-label">태그</label>
@@ -170,32 +156,27 @@
     </div>
 
 
-    <script src="auth-state.js" defer></script>
-    <script src="mypage.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/mypage.js" defer></script>
+    <script src="../js/script.js" defer></script>
     <script>
         // 현재 페이지에 따라 활성 탭 설정
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.service-tab');
             const currentPath = window.location.pathname;
+            const currentPage = currentPath.split('/').pop() || 'index.html';
             
             tabs.forEach(tab => {
-                const href = tab.getAttribute('onclick');
+                const href = tab.getAttribute('href');
                 if (href) {
-                    const url = href.match(/location\.href='([^']+)'/)?.[1];
-                    if (url) {
-                        const tabPath = url.split('/').pop() || 'index.html';
-                        const currentPage = currentPath.split('/').pop() || 'index.html';
-                        
-                        // index.html, mypage.html, edit.html은 모두 첫 번째 탭 활성화
-                        if (tabPath === 'index.html' && 
-                            (currentPage === 'index.html' || currentPage === 'mypage.html' || currentPage === 'edit.html')) {
-                            tab.classList.add('active');
-                        } else if (tabPath === 'live_lecture.html' && currentPage === 'live_lecture.html') {
-                            tab.classList.add('active');
-                        } else {
-                            tab.classList.remove('active');
-                        }
+                    const tabPath = href.split('/').pop() || 'index.html';
+                    
+                    if (tabPath === 'index.html' && currentPage === 'index.html') {
+                        tab.classList.add('active');
+                    } else if (tabPath === 'mypage.html' && currentPage === 'mypage.html') {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
                     }
                 }
             });

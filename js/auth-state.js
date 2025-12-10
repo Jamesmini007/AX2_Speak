@@ -39,6 +39,24 @@
                 btn.onclick = null;
             }
         });
+
+        // 가입하기 버튼 표시/숨김 처리
+        updateSignupButton();
+    }
+
+    // 가입하기 버튼 업데이트
+    function updateSignupButton() {
+        const signupButtons = document.querySelectorAll('.signup-btn');
+        
+        signupButtons.forEach(btn => {
+            if (isLoggedIn()) {
+                // 로그인 상태: 가입하기 버튼 숨기기
+                btn.style.display = 'none';
+            } else {
+                // 로그아웃 상태: 가입하기 버튼 표시
+                btn.style.display = 'inline-block';
+            }
+        });
     }
 
     // 로그아웃 처리
@@ -65,5 +83,6 @@
     window.getCurrentUser = getCurrentUser;
     window.handleLogout = handleLogout;
     window.updateLoginButton = updateLoginButton;
+    window.updateSignupButton = updateSignupButton;
 })();
 

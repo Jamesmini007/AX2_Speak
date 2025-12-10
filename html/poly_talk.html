@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>실시간 강의실 - AX2</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .main-container {
@@ -196,107 +196,6 @@
             color: var(--text-dark);
         }
 
-        /* 언어 선택 모달 */
-        .language-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .language-modal.active {
-            display: flex;
-        }
-
-        .language-modal-backdrop {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-        }
-
-        .language-modal-content {
-            position: relative;
-            z-index: 2001;
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .language-modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 24px;
-            text-align: left;
-        }
-
-        .language-modal-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .language-modal-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .language-modal-item:hover {
-            background: rgba(0, 0, 0, 0.02);
-        }
-
-        .language-modal-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            appearance: none;
-            border: 2px solid #000;
-            border-radius: 4px;
-            position: relative;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-
-        .language-modal-item input[type="checkbox"]:checked {
-            background: #2196F3;
-            border-color: #2196F3;
-        }
-
-        .language-modal-item input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .language-modal-item label {
-            flex: 1;
-            cursor: pointer;
-            font-size: 16px;
-            color: var(--text-dark);
-            user-select: none;
-        }
 
         .timer-display {
             font-size: 24px;
@@ -336,15 +235,18 @@
         <div class="nav-content">
             <div class="nav-left">
                 <div class="logo" onclick="location.href='index.html'">
-                    <img src="AX2_logo.png" alt="AX2" class="logo-img">
+                    <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <button class="service-tab" onclick="location.href='index.html'">
-                        자동 번역/다국어 자막
-                    </button>
-                    <button class="service-tab active" onclick="location.href='live_lecture.html'">
-                        실시간 강의
-                    </button>
+                    <a href="index.html" class="service-tab">
+                        <span>자동 번역/다국어 자막</span>
+                    </a>
+                    <a href="live_lecture.html" class="service-tab active">
+                        <span>실시간 강의</span>
+                    </a>
+                    <a href="pricing.html" class="service-tab">
+                        <span>요금제/결제</span>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
@@ -396,48 +298,43 @@
 
                 <!-- 설정 패널 -->
                 <div class="settings-panel">
-                    <!-- 언어 선택은 모달로 처리됩니다 -->
+                    <div class="settings-section">
+                        <div class="settings-title">번역 언어 선택</div>
+                        <div class="language-list" id="languageList">
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-ko" value="ko" checked>
+                                <label for="lang-ko">한국어</label>
+                            </div>
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-en" value="en" checked>
+                                <label for="lang-en">English</label>
+                            </div>
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-ja" value="ja">
+                                <label for="lang-ja">日本語</label>
+                            </div>
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-zh" value="zh">
+                                <label for="lang-zh">中文</label>
+                            </div>
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-es" value="es">
+                                <label for="lang-es">Español</label>
+                            </div>
+                            <div class="language-item">
+                                <input type="checkbox" id="lang-fr" value="fr">
+                                <label for="lang-fr">Français</label>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- 언어 선택 모달 -->
-    <div class="language-modal" id="languageModal">
-        <div class="language-modal-backdrop" id="languageModalBackdrop"></div>
-        <div class="language-modal-content">
-            <div class="language-modal-title">번역 언어 선택</div>
-            <div class="language-modal-list">
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-ko" value="ko" checked>
-                    <label for="modal-lang-ko">한국어</label>
-                </div>
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-en" value="en" checked>
-                    <label for="modal-lang-en">English</label>
-                </div>
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-ja" value="ja">
-                    <label for="modal-lang-ja">日本語</label>
-                </div>
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-zh" value="zh">
-                    <label for="modal-lang-zh">中文</label>
-                </div>
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-es" value="es">
-                    <label for="modal-lang-es">Español</label>
-                </div>
-                <div class="language-modal-item">
-                    <input type="checkbox" id="modal-lang-fr" value="fr">
-                    <label for="modal-lang-fr">Français</label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="auth-state.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/script.js" defer></script>
     <script>
         // 실시간 강의실 기능
         let isRecording = false;
@@ -621,49 +518,9 @@
         }
 
 
-        // 언어 모달 관련 함수
-        function openLanguageModal() {
-            const modal = document.getElementById('languageModal');
-            modal.classList.add('active');
-        }
-
-        function closeLanguageModal() {
-            const modal = document.getElementById('languageModal');
-            modal.classList.remove('active');
-        }
-
-        function updateSelectedLanguages() {
-            // 모달의 체크박스 상태를 기반으로 selectedLanguages 업데이트
-            selectedLanguages = Array.from(document.querySelectorAll('.language-modal-item input[type="checkbox"]:checked'))
-                .map(cb => cb.value);
-        }
-
         // 이벤트 리스너
         document.getElementById('startBtn').addEventListener('click', startLecture);
         document.getElementById('stopBtn').addEventListener('click', stopLecture);
-
-        // 언어 설정 버튼 클릭 시 모달 열기
-        document.getElementById('languageBtn').addEventListener('click', openLanguageModal);
-
-        // 모달 백드롭 클릭 시 모달 닫기
-        document.getElementById('languageModalBackdrop').addEventListener('click', closeLanguageModal);
-
-        // ESC 키로 모달 닫기
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modal = document.getElementById('languageModal');
-                if (modal.classList.contains('active')) {
-                    closeLanguageModal();
-                }
-            }
-        });
-
-        // 모달 내 체크박스 변경 시 선택된 언어 업데이트
-        document.querySelectorAll('.language-modal-item input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                updateSelectedLanguages();
-            });
-        });
 
         document.getElementById('subtitleToggleBtn').addEventListener('click', function() {
             subtitleVisible = !subtitleVisible;
@@ -679,8 +536,13 @@
             }
         });
 
-        // 초기 선택된 언어 설정
-        updateSelectedLanguages();
+        // 언어 선택 업데이트
+        document.querySelectorAll('#languageList input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                selectedLanguages = Array.from(document.querySelectorAll('#languageList input[type="checkbox"]:checked'))
+                    .map(cb => cb.value);
+            });
+        });
 
 
         // 현재 페이지에 따라 활성 탭 설정

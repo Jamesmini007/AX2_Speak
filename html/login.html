@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AX2 - 로그인</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../css/login.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,7 +12,7 @@
     <!-- 좌측 보라색 영역 -->
     <div class="left-section">
         <a href="index.html" class="logo-btn">
-            <img src="AX2_logo.png" alt="AX2" class="logo-img">
+            <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
         </a>
         <div class="left-content">
             <h1 class="main-headline" data-i18n="main-headline">만들고, 번역하고, 소통하세요</h1>
@@ -81,13 +81,13 @@
                 </button>
                 <button class="social-btn kakao" onclick="loginWithKakao()">
                     <div class="social-icon">
-                        <img src="kakaotalk.png" alt="카카오톡" class="social-icon-img">
+                        <img src="../assets:image/kakaotalk.png" alt="카카오톡" class="social-icon-img">
                     </div>
                     <span data-i18n="kakao-btn">카카오톡으로 시작하기</span>
                 </button>
                 <button class="social-btn naver" onclick="loginWithNaver()">
                     <div class="social-icon">
-                        <img src="naver.png" alt="네이버" class="social-icon-img">
+                        <img src="../assets:image/naver.png" alt="네이버" class="social-icon-img">
                     </div>
                     <span data-i18n="naver-btn">네이버로 시작하기</span>
                 </button>
@@ -111,15 +111,17 @@
                 <button type="submit" class="continue-btn" id="continue-btn" data-i18n="continue-btn">계속</button>
             </form>
 
+            <button type="button" class="guest-btn" id="guest-btn" onclick="loginAsGuest()" data-i18n="guest-btn">게스트</button>
+
             <div class="signup-link">
                 <span data-i18n="signup-question">아직 계정이 없으신가요?</span> <a href="signup.html" onclick="showSignup()" data-i18n="signup-link">회원가입</a>
             </div>
         </div>
     </div>
 
-    <script src="auth-state.js" defer></script>
-    <script src="social-auth.js" defer></script>
-    <script src="login.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/social-auth.js" defer></script>
+    <script src="../js/login.js" defer></script>
 </body>
 </html>
 

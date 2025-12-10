@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>강의 기록 - 실시간 강의 서비스 - AX2</title>
-    <link rel="stylesheet" href="mypage.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../css/mypage.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -22,44 +22,32 @@
         <div class="nav-content">
             <div class="nav-left">
                 <div class="logo" onclick="location.href='index.html'">
-                    <img src="AX2_logo.png" alt="AX2" class="logo-img">
+                    <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <button class="service-tab" onclick="location.href='index.html'">
-                        자동 번역/다국어 자막
-                    </button>
-                    <button class="service-tab active" onclick="location.href='live_lecture.html'">
-                        실시간 강의
-                    </button>
+                    <a href="index.html" class="service-tab">
+                        <span>자동 번역/다국어 자막</span>
+                    </a>
+                    <a href="mypage.html" class="service-tab">
+                        <span>저장공간</span>
+                    </a>
+                    <a href="pricing.html" class="service-tab">
+                        <span>요금제/결제</span>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
+                <a href="live_lecture.html" class="live-lecture-btn active" title="실시간 강의">
+                    <i class="fas fa-video"></i>
+                </a>
                 <div class="plan-info">
                     <span class="highlight">Free</span> <span id="remaining-time">0분 남음</span>
                 </div>
                 <a href="login.html" class="login-btn">로그인</a>
+                <a href="signup.html" class="signup-btn">가입하기</a>
             </div>
         </div>
     </nav>
-
-    <!-- 왼쪽 사이드바 -->
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <div class="sidebar-header">
-                <h3 class="sidebar-title">실시간 강의</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="live_lecture.html" class="sidebar-item" data-page="live-lecture">
-                    <i class="fas fa-video"></i>
-                    <span>강의 시작</span>
-                </a>
-                <a href="live_lecture_history.html" class="sidebar-item active" data-page="live-history">
-                    <i class="fas fa-history"></i>
-                    <span>강의 기록</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
 
     <div class="container">
         <!-- 저장공간 대시보드 -->
@@ -167,32 +155,27 @@
         </div>
     </div>
 
-    <script src="auth-state.js" defer></script>
-    <script src="live_lecture_history.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/live_lecture_history.js" defer></script>
+    <script src="../js/script.js" defer></script>
     <script>
         // 현재 페이지에 따라 활성 탭 설정
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.service-tab');
             const currentPath = window.location.pathname;
+            const currentPage = currentPath.split('/').pop() || 'index.html';
             
             tabs.forEach(tab => {
-                const href = tab.getAttribute('onclick');
+                const href = tab.getAttribute('href');
                 if (href) {
-                    const url = href.match(/location\.href='([^']+)'/)?.[1];
-                    if (url) {
-                        const tabPath = url.split('/').pop() || 'index.html';
-                        const currentPage = currentPath.split('/').pop() || 'index.html';
-                        
-                        if (tabPath === 'live_lecture.html' && 
-                            (currentPage === 'live_lecture.html' || currentPage === 'live_lecture_history.html')) {
-                            tab.classList.add('active');
-                        } else if (tabPath === 'index.html' && 
-                            (currentPage === 'index.html' || currentPage === 'mypage.html' || currentPage === 'edit.html')) {
-                            tab.classList.add('active');
-                        } else {
-                            tab.classList.remove('active');
-                        }
+                    const tabPath = href.split('/').pop() || 'index.html';
+                    
+                    if (tabPath === 'index.html' && currentPage === 'index.html') {
+                        tab.classList.add('active');
+                    } else if (tabPath === 'mypage.html' && currentPage === 'mypage.html') {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
                     }
                 }
             });
@@ -200,4 +183,5 @@
     </script>
 </body>
 </html>
+
 

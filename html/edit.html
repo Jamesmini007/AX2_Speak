@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>AX2 - 강의 번역 편집</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="edit.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/edit.css">
 </head>
 <body>
     <!-- 모바일 메뉴 버튼 -->
@@ -22,46 +22,32 @@
         <div class="nav-content">
             <div class="nav-left">
                 <div class="logo" onclick="location.href='index.html'">
-                    <img src="AX2_logo.png" alt="AX2" class="logo-img">
+                    <img src="../assets:image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <button class="service-tab active" onclick="location.href='index.html'">
-                        자동 번역/다국어 자막
-                    </button>
-                    <button class="service-tab" onclick="location.href='live_lecture.html'">
-                        실시간 강의
-                    </button>
+                    <a href="index.html" class="service-tab">
+                        <span>자동 번역/다국어 자막</span>
+                    </a>
+                    <a href="mypage.html" class="service-tab">
+                        <span>저장공간</span>
+                    </a>
+                    <a href="pricing.html" class="service-tab">
+                        <span>요금제/결제</span>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
+                <a href="live_lecture.html" class="live-lecture-btn" title="실시간 강의">
+                    <i class="fas fa-video"></i>
+                </a>
                 <div class="plan-info">
                     <span class="highlight">Free</span> <span id="remaining-time">0분 남음</span>
                 </div>
                 <a href="login.html" class="login-btn">로그인</a>
+                <a href="signup.html" class="signup-btn">가입하기</a>
             </div>
         </div>
     </nav>
-
-    <!-- 왼쪽 사이드바 -->
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <div class="sidebar-header">
-                <h3 class="sidebar-title">
-                    <img src="AX2_logo.png" alt="AX2" class="sidebar-logo-img">
-                </h3>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="index.html" class="sidebar-item" data-page="home">
-                    <i class="fas fa-home"></i>
-                    <span>홈</span>
-                </a>
-                <a href="mypage.html" class="sidebar-item active" data-page="mypage">
-                    <i class="fas fa-user"></i>
-                    <span>마이페이지</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
 
     <!-- 메인 콘텐츠 -->
     <div class="main-content">
@@ -110,7 +96,7 @@
                     <input type="file" id="video-file-input" class="hidden" accept="video/*">
                     <div class="drop-zone-content">
                         <div class="drop-zone-icon">
-                            <img src="cloud.png" alt="업로드" style="width: 100%; height: 100%; object-fit: contain;">
+                            <img src="../assets:image/cloud.png" alt="업로드" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <h3 class="drop-zone-title">영상을 드래그하거나 클릭하여 업로드</h3>
                         <p class="drop-zone-subtitle">MP4, MOV, AVI, WEBM (최대 2GB)</p>
@@ -139,26 +125,6 @@
             </div>
 
             <div class="video-controls">
-                <div class="controls-row">
-                    <button class="play-btn" id="play-btn">▶</button>
-                    <span class="time-display" id="time-display">0:00:00</span>
-                    <div class="progress-bar" id="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                    </div>
-                    <div class="control-icons">
-                        <button class="control-icon" id="caption-btn" title="자막">CC</button>
-                        <button class="control-icon" id="volume-btn" title="볼륨">
-                            <svg class="volume-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3 9v6h4l5 5V4L7 9H3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                <path class="volume-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-                                <path class="volume-wave" d="M18.36 5.64a9 9 0 0 1 0 12.72" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-                            </svg>
-                        </button>
-                        <button class="control-icon" id="speed-btn" title="재생 속도">1x</button>
-                        <button class="control-icon" id="fullscreen-btn" title="전체화면">⛶</button>
-                    </div>
-                </div>
-
                 <div class="action-buttons">
                     <button class="action-btn apply-btn-inline" onclick="applyChanges()">
                         변경사항 적용하기
@@ -191,31 +157,26 @@
         </div>
     </div>
 
-    <script src="auth-state.js" defer></script>
-    <script src="edit.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../js/edit.js" defer></script>
     <script>
         // 현재 페이지에 따라 활성 탭 설정
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.service-tab');
             const currentPath = window.location.pathname;
+            const currentPage = currentPath.split('/').pop() || 'index.html';
             
             tabs.forEach(tab => {
-                const href = tab.getAttribute('onclick');
+                const href = tab.getAttribute('href');
                 if (href) {
-                    const url = href.match(/location\.href='([^']+)'/)?.[1];
-                    if (url) {
-                        const tabPath = url.split('/').pop() || 'index.html';
-                        const currentPage = currentPath.split('/').pop() || 'index.html';
-                        
-                        // index.html, mypage.html, edit.html은 모두 첫 번째 탭 활성화
-                        if (tabPath === 'index.html' && 
-                            (currentPage === 'index.html' || currentPage === 'mypage.html' || currentPage === 'edit.html')) {
-                            tab.classList.add('active');
-                        } else if (tabPath === 'live_lecture.html' && currentPage === 'live_lecture.html') {
-                            tab.classList.add('active');
-                        } else {
-                            tab.classList.remove('active');
-                        }
+                    const tabPath = href.split('/').pop() || 'index.html';
+                    
+                    if (tabPath === 'index.html' && (currentPage === 'index.html' || currentPage === 'edit.html')) {
+                        tab.classList.add('active');
+                    } else if (tabPath === 'mypage.html' && currentPage === 'mypage.html') {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
                     }
                 }
             });

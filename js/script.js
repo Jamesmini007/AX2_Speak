@@ -643,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 번역 설정 가져오기
         const originalLang = document.getElementById('originalLang').value;
-        const speakers = document.getElementById('speakers').value;
+        const speakers = 'auto'; // 기본값: 자동 감지
         
         // 선택된 대상 언어들 가져오기
         const targetLanguages = Array.from(document.querySelectorAll('.language-chip'))
