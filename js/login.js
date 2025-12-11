@@ -262,6 +262,7 @@
                     userId: user.id,
                     email: user.email,
                     name: user.name,
+                    password: user.password || '',
                     provider: user.provider || 'email',
                     loginTime: new Date().toISOString()
                 };
@@ -296,7 +297,7 @@
                     
                     setTimeout(() => {
                         if (!handleRedirectAfterLogin()) {
-                            window.location.href = 'mypage.html';
+                            window.location.href = 'storage.html';
                         }
                     }, 1500);
                 } else {
@@ -328,7 +329,7 @@
                     
                     setTimeout(() => {
                         if (!handleRedirectAfterLogin()) {
-                            window.location.href = 'mypage.html';
+                            window.location.href = 'storage.html';
                         }
                     }, 1500);
                 } else {
@@ -360,7 +361,7 @@
                     
                     setTimeout(() => {
                         if (!handleRedirectAfterLogin()) {
-                            window.location.href = 'mypage.html';
+                            window.location.href = 'storage.html';
                         }
                     }, 1500);
                 } else {
@@ -429,7 +430,7 @@
                 
                 setTimeout(() => {
                     if (!handleRedirectAfterLogin()) {
-                        window.location.href = 'mypage.html';
+                        window.location.href = 'storage.html';
                     }
                 }, 1500);
             } catch (error) {
@@ -473,7 +474,7 @@
                 
                 setTimeout(() => {
                     if (!handleRedirectAfterLogin()) {
-                        window.location.href = 'index.html';
+                        window.location.href = '../index.html';
                     }
                 }, 1500);
             } catch (error) {
@@ -519,7 +520,7 @@
                     return; // 리디렉션할 URL이 있으면 여기서 종료
                 }
                 // 리디렉션할 URL이 없으면 마이페이지로 이동
-                window.location.href = 'mypage.html';
+                window.location.href = 'storage.html';
             }
         }
 

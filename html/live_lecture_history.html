@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>강의 기록 - 실시간 강의 서비스 - AX2</title>
     <link rel="stylesheet" href="../css/mypage.css">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -21,18 +21,18 @@
     <nav class="glass-nav">
         <div class="nav-content">
             <div class="nav-left">
-                <div class="logo" onclick="location.href='index.html'">
+                <div class="logo" onclick="location.href='../index.html'">
                     <img src="../assets/image/AX2_logo.png" alt="AX2" class="logo-img">
                 </div>
                 <div class="service-tabs">
-                    <a href="index.html" class="service-tab">
+                    <a href="../index.html" class="service-tab">
                         <span>자동 번역/다국어 자막</span>
-                    </a>
-                    <a href="mypage.html" class="service-tab">
-                        <span>저장공간</span>
                     </a>
                     <a href="pricing.html" class="service-tab">
                         <span>요금제/결제</span>
+                    </a>
+                    <a href="guide.html" class="service-tab">
+                        <span>사용가이드</span>
                     </a>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <div class="more-menu-dropdown-content">
                         <div class="more-menu-section">
                             <div class="more-menu-section-title">기타 제품</div>
-                            <a href="index.html" class="more-menu-item">
+                            <a href="../index.html" class="more-menu-item">
                                 <div class="more-menu-item-icon">
                                     <i class="fas fa-language"></i>
                                 </div>
@@ -247,7 +247,7 @@
 
     <script src="../js/auth-state.js" defer></script>
     <script src="../js/live_lecture_history.js" defer></script>
-    <script src="../js/script.js" defer></script>
+    <script src="../script.js" defer></script>
     <script src="../js/more-menu.js" defer></script>
     <script>
         // 더보기 메뉴 토글
@@ -309,7 +309,7 @@
                     
                     if (tabPath === 'index.html' && currentPage === 'index.html') {
                         tab.classList.add('active');
-                    } else if (tabPath === 'mypage.html' && currentPage === 'mypage.html') {
+                    } else if (tabPath === 'storage.html' && currentPage === 'storage.html') {
                         tab.classList.add('active');
                     } else {
                         tab.classList.remove('active');

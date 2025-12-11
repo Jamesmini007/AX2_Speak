@@ -102,7 +102,7 @@
             if (!videoId) {
                 logger.error('비디오 ID가 없습니다.');
                 alert('영상을 찾을 수 없습니다.\n마이페이지로 이동합니다.');
-                window.location.href = 'mypage.html';
+                window.location.href = 'storage.html';
                 return;
             }
             
@@ -117,7 +117,7 @@
                 if (!currentVideo) {
                     logger.error('비디오를 찾을 수 없습니다:', videoId);
                     alert('강의를 찾을 수 없습니다.\n마이페이지로 이동합니다.');
-                    window.location.href = 'mypage.html';
+                    window.location.href = 'storage.html';
                     return;
                 }
                 
@@ -974,7 +974,7 @@
                 
                 // 저장 완료 후 마이페이지로 이동
                 setTimeout(() => {
-                    window.location.href = 'mypage.html';
+                    window.location.href = 'storage.html';
                 }, 1000);
             } else {
                 alert('저장 중 오류가 발생했습니다.');
@@ -988,27 +988,34 @@
         window.applyChanges = applyChanges;
 
 
-        // 남은 시간 초기화 및 표시 (최적화)
+        // 남은 시간 초기화 및 표시 (초 단위로 관리)
         function initializeRemainingTime() {
-            let remainingMinutes = parseInt(localStorage.getItem('remainingMinutes') || '0');
+            let remainingSeconds = parseInt(localStorage.getItem('remainingSeconds') || '0');
+            const lastUpdate = parseInt(localStorage.getItem('lastTimeUpdate') || '0');
+            const now = Date.now();
             
-            // 기존에 100분으로 설정된 경우 60분으로 업데이트
-            if (remainingMinutes === 100) {
-                remainingMinutes = 60;
-                localStorage.setItem('remainingMinutes', '60');
+            // 기존 분 단위 데이터 마이그레이션
+            const oldMinutes = parseInt(localStorage.getItem('remainingMinutes') || '0');
+            if (oldMinutes > 0 && remainingSeconds === 0) {
+                remainingSeconds = oldMinutes * 60;
+                localStorage.removeItem('remainingMinutes');
             }
             
-            // 초기화되지 않은 경우 60분으로 설정
-            if (remainingMinutes === 0 && !localStorage.getItem('timeInitialized')) {
-                remainingMinutes = 60;
-                localStorage.setItem('remainingMinutes', '60');
+            // 초기화되지 않은 경우 5분(300초)으로 설정
+            if (remainingSeconds === 0 && !localStorage.getItem('timeInitialized')) {
+                remainingSeconds = 5 * 60;
+                localStorage.setItem('remainingSeconds', remainingSeconds.toString());
+                localStorage.setItem('lastTimeUpdate', now.toString());
                 localStorage.setItem('timeInitialized', 'true');
             }
             
-            const remainingTimeEl = document.getElementById('remaining-time');
-            if (remainingTimeEl) {
-                remainingTimeEl.textContent = `${remainingMinutes}분 남음`;
+            // 마지막 업데이트 이후 경과 시간 계산하여 차감
+            if (lastUpdate > 0 && remainingSeconds > 0) {
+                const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
+                remainingSeconds = Math.max(0, remainingSeconds - elapsedSeconds);
+                localStorage.setItem('remainingSeconds', remainingSeconds.toString());
             }
+            localStorage.setItem('lastTimeUpdate', now.toString());
         }
         
         // 컨트롤 아이콘 기능 활성화
