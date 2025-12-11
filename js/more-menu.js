@@ -50,7 +50,10 @@
 
     // 언어 선택 업데이트 (최적화: requestAnimationFrame 사용)
     function updateLanguageSelection(lang) {
-        if (!DOMCache.languageOptions) return;
+        // DOMCache 재확인 (동적으로 추가된 요소 대응)
+        DOMCache.languageOptions = document.querySelectorAll('.language-dropdown-menu .language-option');
+        
+        if (!DOMCache.languageOptions || DOMCache.languageOptions.length === 0) return;
         
         // DOM 업데이트를 requestAnimationFrame으로 배치하여 성능 최적화
         requestAnimationFrame(() => {
@@ -79,17 +82,23 @@
 
     // 언어 변경 처리 (최적화: 배치 업데이트)
     function handleLanguageChange(lang) {
-        if (state.currentLang === lang) return; // 중복 방지
+        if (state.currentLang === lang) {
+            console.log('이미 선택된 언어입니다:', lang);
+            return; // 중복 방지
+        }
         
+        console.log('언어 변경:', state.currentLang, '->', lang);
         state.currentLang = lang;
         
         // localStorage 저장 (비동기로 처리하여 메인 스레드 블로킹 방지)
         try {
             localStorage.setItem('siteLanguage', lang);
+            console.log('localStorage에 저장됨:', lang);
         } catch (e) {
             console.warn('localStorage 저장 실패:', e);
         }
         
+        // 언어 선택 UI 업데이트
         updateLanguageSelection(lang);
         
         // 언어 변경 이벤트 발생 (다른 스크립트에서 사용 가능)
@@ -108,6 +117,9 @@
         announcement.textContent = `언어가 ${lang}로 변경되었습니다.`;
         document.body.appendChild(announcement);
         setTimeout(() => document.body.removeChild(announcement), 1000);
+        
+        // 사용자 피드백 (선택 확인)
+        console.log('언어 변경 완료:', lang);
     }
 
     // 메뉴 토글 (접근성 개선)
@@ -147,7 +159,7 @@
     let languageMenuTimeout = null;
     
     function showLanguageMenu() {
-        if (!DOMCache.languageDropdownMenu) return;
+        if (!DOMCache.languageDropdownMenu || !DOMCache.moreMenuDropdown) return;
         
         // 기존 타이머 취소
         if (languageMenuTimeout) {
@@ -157,24 +169,26 @@
         
         state.isLanguageMenuVisible = true;
         
+        // 드롭다운 메뉴 확장
+        DOMCache.moreMenuDropdown.classList.add('expanded');
+        
         // 즉시 표시하되 애니메이션 적용
-        if (DOMCache.languageDropdownMenu.style.display === 'none') {
+        if (DOMCache.languageDropdownMenu.style.display === 'none' || 
+            !DOMCache.languageDropdownMenu.style.display) {
             DOMCache.languageDropdownMenu.style.display = 'block';
             // 리플로우 강제 후 애니메이션 시작
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     DOMCache.languageDropdownMenu.classList.add('visible');
-                    DOMCache.languageDropdownMenu.style.opacity = '1';
                 });
             });
         } else {
             DOMCache.languageDropdownMenu.classList.add('visible');
-            DOMCache.languageDropdownMenu.style.opacity = '1';
         }
     }
 
     function hideLanguageMenu() {
-        if (!DOMCache.languageDropdownMenu) return;
+        if (!DOMCache.languageDropdownMenu || !DOMCache.moreMenuDropdown) return;
         
         // 기존 타이머 취소
         if (languageMenuTimeout) {
@@ -184,8 +198,11 @@
         // 약간의 지연을 두어 메뉴 간 이동 시 끊김 방지
         languageMenuTimeout = setTimeout(() => {
             state.isLanguageMenuVisible = false;
+            
+            // 드롭다운 메뉴 축소
+            DOMCache.moreMenuDropdown.classList.remove('expanded');
+            
             DOMCache.languageDropdownMenu.classList.remove('visible');
-            DOMCache.languageDropdownMenu.style.opacity = '0';
             
             // 애니메이션 완료 후 숨김
             setTimeout(() => {
@@ -193,17 +210,23 @@
                     DOMCache.languageDropdownMenu.style.display = 'none';
                 }
             }, 200);
-        }, 100);
+        }, 150); // 지연 시간 약간 증가로 안정성 향상
     }
 
     // 이벤트 위임을 사용한 언어 옵션 클릭 처리
     function handleLanguageOptionClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         const option = e.target.closest('.language-option');
         if (!option) return;
         
         const lang = option.dataset.lang;
         if (lang) {
             handleLanguageChange(lang);
+            
+            // 언어 선택 후 피드백 (선택된 언어 표시)
+            console.log('언어가 변경되었습니다:', lang);
         }
     }
 
@@ -256,9 +279,28 @@
             DOMCache.languageDropdownMenu.addEventListener('mouseleave', handleMouseLeave);
         }
 
-        // 언어 옵션 클릭 이벤트 (이벤트 위임)
+        // 언어 옵션 클릭 이벤트 (이벤트 위임) - 개선
         if (DOMCache.languageDropdownMenu) {
-            DOMCache.languageDropdownMenu.addEventListener('click', handleLanguageOptionClick);
+            // 클릭 이벤트 리스너 추가 (capture phase에서도 처리)
+            DOMCache.languageDropdownMenu.addEventListener('click', handleLanguageOptionClick, true);
+            
+            // 각 언어 옵션에 직접 클릭 이벤트도 추가 (확실한 작동 보장)
+            if (DOMCache.languageOptions && DOMCache.languageOptions.length > 0) {
+                DOMCache.languageOptions.forEach(option => {
+                    // 중복 방지를 위해 한 번만 추가
+                    if (!option.hasAttribute('data-listener-added')) {
+                        option.setAttribute('data-listener-added', 'true');
+                        option.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const lang = option.dataset.lang;
+                            if (lang) {
+                                handleLanguageChange(lang);
+                            }
+                        });
+                    }
+                });
+            }
             
             // 키보드 접근성 추가
             DOMCache.languageDropdownMenu.addEventListener('keydown', (e) => {
@@ -267,6 +309,7 @@
                 
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    e.stopPropagation();
                     const lang = option.dataset.lang;
                     if (lang) {
                         handleLanguageChange(lang);

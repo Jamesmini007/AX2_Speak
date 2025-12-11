@@ -2457,7 +2457,8 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-.more-menu-dropdown:has(.language-setting-item:hover) {
+/* 드롭다운 확장은 JavaScript로 제어 */
+.more-menu-dropdown.expanded {
     width: 540px;
 }
 
@@ -2602,13 +2603,7 @@ body {
     transform: translate3d(0, 0, 0);
 }
 
-.more-menu-dropdown:has(.language-setting-item:hover) .language-dropdown-menu {
-    display: block;
-}
-
-.more-menu-dropdown:has(.language-setting-item:hover) .language-dropdown-menu.visible {
-    animation: fadeInSlide 0.2s ease-out;
-}
+/* CSS :has() 선택자 제거 - JavaScript로만 제어 */
 
 @keyframes fadeInSlide {
     from {
@@ -2656,7 +2651,7 @@ body {
 
 .language-option:hover {
     background-color: rgba(0, 0, 0, 0.04);
-    transform: translateX(3px) translateZ(0);
+    /* transform 제거로 레이아웃 안정화 */
 }
 
 .language-option:hover::before {
@@ -2732,7 +2727,7 @@ body {
         padding: 16px;
     }
     
-    .more-menu-dropdown:has(.language-setting-item:hover) {
+    .more-menu-dropdown.expanded {
         width: 460px;
     }
 }
