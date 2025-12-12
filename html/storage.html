@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>나의 작업 - AX2</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../css/mypage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .storage-container {
@@ -339,239 +340,8 @@
         <div class="reflection-light"></div>
     </div>
 
-    <!-- 상단 네비게이션 -->
-    <nav class="glass-nav">
-        <div class="nav-content">
-            <div class="nav-left">
-                <div class="logo" onclick="location.href='index.html'">
-                    <img src="../assets/image/AX2_logo.png" alt="AX2" class="logo-img">
-                </div>
-                <div class="service-tabs">
-                    <a href="index.html" class="service-tab">
-                        <span data-i18n="nav-auto-translate">자막생성</span>
-                    </a>
-                    <a href="used.html" class="service-tab">
-                        <span data-i18n="nav-usage">사용방법</span>
-                    </a>
-                    <a href="pricing.html" class="service-tab">
-                        <span data-i18n="nav-pricing">요금제/결제</span>
-                    </a>
-                </div>
-            </div>
-            <div class="nav-right">
-                <a href="login.html" class="login-btn" data-i18n="nav-login">로그인</a>
-                <a href="signup.html" class="signup-btn" data-i18n="nav-signup">가입하기</a>
-                <div class="more-menu-btn" id="moreMenuBtn">
-                    <div class="dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-                <div class="more-menu-dropdown" id="moreMenuDropdown">
-                    <div class="more-menu-dropdown-content">
-                        <ul class="menu-comp">
-                            <li>
-                                <div class="menu-comp__products">
-                                    <ul class="nav__group">
-                                        <li class="nav__title" data-i18n="menu-other-products">기타 제품</li>
-                                        <li class="navbar__item navbar__item--md">
-                                            <a href="index.html" data-i18n-title="nav-auto-translate">
-                                                <div class="navbar__item__icon"><i class="fas fa-language"></i></div>
-                                                <div class="navbar__item__content">
-                                                    <div class="navbar__item__title" data-i18n="menu-subtitle-gen">자막생성</div>
-                                                    <div class="navbar__item__description" data-i18n="menu-subtitle-desc">AI 기반 실시간 번역</div>
-                                                </div>
-                                                <div class="navbar__item__go"><i class="fas fa-arrow-right"></i></div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--md">
-                                            <a href="live_lecture.html" data-i18n-title="menu-lecture-trans">
-                                                <div class="navbar__item__icon"><i class="fas fa-video"></i></div>
-                                                <div class="navbar__item__content">
-                                                    <div class="navbar__item__title" data-i18n="menu-lecture-trans">강의 번역</div>
-                                                    <div class="navbar__item__description" data-i18n="menu-lecture-desc">라이브 번역 및 자막</div>
-                                                </div>
-                                                <div class="navbar__item__go"><i class="fas fa-arrow-right"></i></div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="menu-comp__business">
-                                    <ul class="nav__group">
-                                        <li class="nav__title" data-i18n="menu-solutions">솔루션</li>
-                                        <li class="navbar__item navbar__item--lg">
-                                            <a href="#" data-i18n-title="menu-business">
-                                                <div class="navbar__item__icon"><i class="fas fa-briefcase"></i></div>
-                                                <div class="navbar__item__content">
-                                                    <div class="navbar__item__title" data-i18n="menu-business">비즈니스</div>
-                                                    <div class="navbar__item__description" data-i18n="menu-business-desc">비즈니스 팀을 위한 PDF 편집 및 워크플로 간소화</div>
-                                                </div>
-                                                <div class="navbar__item__go"><i class="fas fa-arrow-right"></i></div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <ul class="nav__group">
-                                        <li class="nav__title" data-i18n="menu-applications">응용 프로그램</li>
-                                        <li class="navbar__item navbar__item--md">
-                                            <a href="#" data-i18n-title="menu-desktop">
-                                                <div class="navbar__item__icon"><i class="fas fa-desktop"></i></div>
-                                                <div class="navbar__item__content">
-                                                    <div class="navbar__item__title" data-i18n="menu-desktop">데스크톱 앱</div>
-                                                    <div class="navbar__item__description" data-i18n="menu-desktop-desc">Mac 및 Windows에서 사용 가능</div>
-                                                </div>
-                                                <div class="navbar__item__go"><i class="fas fa-arrow-right"></i></div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--md">
-                                            <a href="#" data-i18n-title="menu-mobile">
-                                                <div class="navbar__item__icon"><i class="fas fa-mobile-alt"></i></div>
-                                                <div class="navbar__item__content">
-                                                    <div class="navbar__item__title" data-i18n="menu-mobile">모바일 앱</div>
-                                                    <div class="navbar__item__description" data-i18n="menu-mobile-desc">iOS 및 안드로이드에서 사용 가능</div>
-                                                </div>
-                                                <div class="navbar__item__go"><i class="fas fa-arrow-right"></i></div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- 도움 서브메뉴 패널 - 솔루션 부분에 표시 -->
-                                <div class="submenu-panel submenu-panel--help" id="helpSubmenuPanel">
-                                    <ul class="help-menu-list">
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="used.html" data-i18n-title="help-usage">
-                                                <div class="navbar__item__icon"><i class="fas fa-book"></i></div>
-                                                <div class="navbar__item__title" data-i18n="help-usage">사용방법</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="help-faq">
-                                                <div class="navbar__item__icon"><i class="fas fa-question-circle"></i></div>
-                                                <div class="navbar__item__title" data-i18n="help-faq">자주 묻는 질문</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="help-tools">
-                                                <div class="navbar__item__icon"><i class="fas fa-tools"></i></div>
-                                                <div class="navbar__item__title" data-i18n="help-tools">도구</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="help-legal">
-                                                <div class="navbar__item__icon"><i class="fas fa-gavel"></i></div>
-                                                <div class="navbar__item__title" data-i18n="help-legal">법률 & 개인 정보 보호</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="help-contact">
-                                                <div class="navbar__item__icon"><i class="fas fa-envelope"></i></div>
-                                                <div class="navbar__item__title" data-i18n="help-contact">문의</div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- 언어 서브메뉴 패널 - 솔루션 부분에 표시 -->
-                                <div class="submenu-panel submenu-panel--language" id="languageSubmenuPanel">
-                                    <ul class="language-menu-list">
-                                        <li class="navbar__item navbar__item--xs">
-                                            <div class="language-item" data-lang="ko">
-                                                <div class="navbar__item__icon"><i class="fas fa-globe"></i></div>
-                                                <div class="navbar__item__title">한국어</div>
-                                                <i class="fas fa-check language-check"></i>
-                                            </div>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <div class="language-item" data-lang="ja">
-                                                <div class="navbar__item__icon"><i class="fas fa-globe"></i></div>
-                                                <div class="navbar__item__title">日本語</div>
-                                                <i class="fas fa-check language-check" style="display: none;"></i>
-                                            </div>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <div class="language-item" data-lang="zh">
-                                                <div class="navbar__item__icon"><i class="fas fa-globe"></i></div>
-                                                <div class="navbar__item__title">中文 (简体)</div>
-                                                <i class="fas fa-check language-check" style="display: none;"></i>
-                                            </div>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <div class="language-item" data-lang="de">
-                                                <div class="navbar__item__icon"><i class="fas fa-globe"></i></div>
-                                                <div class="navbar__item__title">Deutsch</div>
-                                                <i class="fas fa-check language-check" style="display: none;"></i>
-                                            </div>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <div class="language-item" data-lang="fr">
-                                                <div class="navbar__item__icon"><i class="fas fa-globe"></i></div>
-                                                <div class="navbar__item__title">Français</div>
-                                                <i class="fas fa-check language-check" style="display: none;"></i>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="menu-comp__general">
-                                    <ul>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="pricing.html" data-i18n-title="menu-pricing">
-                                                <div class="navbar__item__icon"><i class="fas fa-tag"></i></div>
-                                                <div class="navbar__item__title" data-i18n="menu-pricing">가격</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="menu-security">
-                                                <div class="navbar__item__icon"><i class="fas fa-shield-alt"></i></div>
-                                                <div class="navbar__item__title" data-i18n="menu-security">보안</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="menu-features">
-                                                <div class="navbar__item__icon"><i class="fas fa-star"></i></div>
-                                                <div class="navbar__item__title" data-i18n="menu-features">기능</div>
-                                            </a>
-                                        </li>
-                                        <li class="navbar__item navbar__item--xs">
-                                            <a href="#" data-i18n-title="menu-about">
-                                                <div class="navbar__item__icon"><i class="fas fa-heart"></i></div>
-                                                <div class="navbar__item__title" data-i18n="menu-about">회사 소개</div>
-                                            </a>
-                                        </li>
-                                        <li class="divider divider--break"></li>
-                                        <li class="nav-has-dropdown">
-                                            <div class="navbar__item navbar__item--xs help-setting-item" id="helpSettingBtn">
-                                                <div>
-                                                    <div class="navbar__item__icon"><i class="fas fa-chevron-left"></i></div>
-                                                    <div class="navbar__item__title" data-i18n="menu-help">도움</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="nav-has-dropdown">
-                                            <div class="navbar__item navbar__item--xs language-setting-item" id="languageSettingBtn">
-                                                <div>
-                                                    <div class="navbar__item__icon"><i class="fas fa-chevron-left"></i></div>
-                                                    <div class="navbar__item__title" data-i18n="menu-language">언어</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- 네비게이션 바 플레이스홀더 -->
+    <div id="nav-placeholder"></div>
 
     <!-- 메인 컨텐츠 -->
     <div class="storage-container">
@@ -617,7 +387,7 @@
             </div>
         </div>
 
-        <!-- 저장공간 바 -->
+        <!-- 저장공간 바 (기존) -->
         <div class="storage-bar-section">
             <div class="storage-bar-header">
                 <div class="storage-bar-title">저장공간</div>
@@ -628,164 +398,206 @@
             </div>
         </div>
 
-        <!-- 작업 목록 -->
-        <div class="works-section">
-            <div class="works-header">
-                <div class="works-title">작업 목록</div>
-                <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all">전체</button>
-                    <button class="filter-tab" data-filter="completed">완료</button>
-                    <button class="filter-tab" data-filter="processing">진행중</button>
+        <!-- 작업 목록 (mypage.html에서 추가) -->
+        <div class="videos-section">
+            <div class="section-header">
+                <div class="section-title">작업 목록</div>
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">전체</button>
+                    <button class="filter-btn" data-filter="recent">최근</button>
+                    <button class="filter-btn" data-filter="expiring">만료 예정</button>
                 </div>
             </div>
-
-            <div id="works-content">
-                <!-- 빈 상태 -->
-                <div class="empty-state" id="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <div class="empty-title">아직 작업이 없습니다</div>
-                    <div class="empty-desc">영상을 업로드하고 자막을 생성해보세요</div>
-                    <button class="empty-btn" onclick="location.href='../index.html'">
-                        <i class="fas fa-plus"></i>
-                        새 작업 시작하기
-                    </button>
-                </div>
-
-                <!-- 작업 테이블 (데이터가 있을 때 표시) -->
-                <table class="works-table" id="works-table" style="display: none;">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%;">제목</th>
-                            <th>생성일</th>
-                            <th>영상 길이</th>
-                            <th>상태</th>
-                            <th style="width: 100px;">관리</th>
-                        </tr>
-                    </thead>
-                    <tbody id="works-list">
-                        <!-- 작업 목록이 동적으로 추가됩니다 -->
-                    </tbody>
-                </table>
+            <div class="video-grid" id="video-grid">
+                <!-- 영상 카드들이 여기에 동적으로 추가됩니다 -->
             </div>
         </div>
     </div>
 
+    <!-- 편집 모달 (mypage.html에서 추가) -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">영상 편집</div>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">영상 제목</label>
+                <input type="text" class="form-input" id="edit-title" placeholder="영상 제목을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">설명</label>
+                <textarea class="form-input" id="edit-description" rows="4" placeholder="영상 설명을 입력하세요"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">태그</label>
+                <input type="text" class="form-input" id="edit-tags" placeholder="태그를 쉼표로 구분하여 입력하세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">카테고리</label>
+                <select class="form-select" id="edit-category">
+                    <option value="">카테고리 선택</option>
+                    <option value="business">비즈니스</option>
+                    <option value="education">교육</option>
+                    <option value="technology">기술</option>
+                    <option value="marketing">마케팅</option>
+                    <option value="other">기타</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEditModal()">취소</button>
+                <button class="btn btn-primary" onclick="saveEdit()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/nav-bar.js" defer></script>
     <script src="../js/auth-state.js" defer></script>
     <script src="../script.js" defer></script>
-    <script src="../js/more-menu.js" defer></script>
+    <script src="../js/mypage.js" defer></script>
     <script>
-        // 서비스 탭 활성화
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.service-tab');
-            const currentPath = window.location.pathname;
-            const currentPage = currentPath.split('/').pop() || 'index.html';
+        // 저장된 영상 로드
+        function loadSavedVideos() {
+            const savedVideos = JSON.parse(localStorage.getItem('savedVideos') || '[]');
+            const videoGrid = document.getElementById('video-grid');
             
-            tabs.forEach(tab => {
-                const href = tab.getAttribute('href');
-                if (href) {
-                    const tabPath = href.split('/').pop() || 'index.html';
-                    
-                    if (tabPath === 'storage.html' && currentPage === 'storage.html') {
-                        tab.classList.add('active');
-                    } else if (tabPath === 'index.html' && currentPage === 'index.html') {
-                        tab.classList.add('active');
-                    } else if (tabPath === 'used.html' && currentPage === 'used.html') {
-                        tab.classList.add('active');
-                    } else if (tabPath === 'pricing.html' && currentPage === 'pricing.html') {
-                        tab.classList.add('active');
-                    } else {
-                        tab.classList.remove('active');
-                    }
-                }
+            if (!videoGrid) {
+                console.error('video-grid 요소를 찾을 수 없습니다.');
+                return;
+            }
+            
+            console.log('저장된 영상 개수:', savedVideos.length);
+            
+            if (savedVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                        <div class="empty-state-icon" style="font-size: 48px; margin-bottom: 16px;">📹</div>
+                        <div class="empty-state-text" style="font-size: 16px; color: #999999;">저장된 영상이 없습니다</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color: #999;">
+                            홈페이지에서 영상을 업로드하고 번역하면 여기에 표시됩니다.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 최근 순으로 정렬
+            const sortedVideos = savedVideos.slice().sort((a, b) => {
+                const dateA = a.savedAt ? new Date(a.savedAt) : (a.createdAt ? new Date(a.createdAt) : new Date(0));
+                const dateB = b.savedAt ? new Date(b.savedAt) : (b.createdAt ? new Date(b.createdAt) : new Date(0));
+                return dateB - dateA;
             });
-        });
-    </script>
-    <script src="../js/more-menu.js"></script>
-    <script>
-        // 작업 목록 로드
-        function loadWorks() {
-            const works = JSON.parse(localStorage.getItem('works') || '[]');
-            const worksList = document.getElementById('works-list');
-            const worksTable = document.getElementById('works-table');
-            const emptyState = document.getElementById('empty-state');
             
-            // 통계 업데이트
-            document.getElementById('total-works').textContent = works.length;
-            document.getElementById('completed-works').textContent = works.filter(w => w.status === 'completed').length;
+            videoGrid.innerHTML = sortedVideos.map(video => {
+                const date = new Date(video.createdAt || video.savedAt);
+                const dateStr = date.getFullYear() + '.' + 
+                    String(date.getMonth() + 1).padStart(2, '0') + '.' + 
+                    String(date.getDate()).padStart(2, '0');
+                
+                let duration = '0:00';
+                if (video.duration) {
+                    const minutes = Math.floor(video.duration / 60);
+                    const seconds = Math.floor(video.duration % 60);
+                    duration = minutes + ':' + String(seconds).padStart(2, '0');
+                }
+                
+                return `
+                    <div class="video-card" data-video-id="${video.id}">
+                        <div class="video-thumbnail">
+                            <div class="thumbnail-placeholder">
+                                <i class="fas fa-play-circle" style="font-size: 48px; color: #999;"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${video.title || '제목 없음'}</div>
+                            <div class="video-meta">${dateStr} • ${duration}</div>
+                            <div class="video-actions">
+                                <button class="action-btn primary" onclick="window.location.href='edit.html?id=${video.id}'">편집</button>
+                                <button class="action-btn" onclick="if(typeof downloadVideo === 'function') downloadVideo('${video.id}'); else alert('다운로드 기능을 사용할 수 없습니다.');">다운로드</button>
+                                <button class="action-btn danger" onclick="if(typeof deleteVideo === 'function') deleteVideo('${video.id}'); else if(confirm('이 영상을 삭제하시겠습니까?')) { const videos = JSON.parse(localStorage.getItem('savedVideos') || '[]'); const filtered = videos.filter(v => v.id !== '${video.id}'); localStorage.setItem('savedVideos', JSON.stringify(filtered)); loadSavedVideos(); updateStats(); }">삭제</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const savedVideos = JSON.parse(localStorage.getItem('savedVideos') || '[]');
+            
+            // 통계 카드 업데이트
+            const totalWorksEl = document.getElementById('total-works');
+            const completedWorksEl = document.getElementById('completed-works');
+            const totalDurationEl = document.getElementById('total-duration');
+            const thisMonthEl = document.getElementById('this-month');
+            
+            if (totalWorksEl) totalWorksEl.textContent = savedVideos.length;
+            if (completedWorksEl) completedWorksEl.textContent = savedVideos.filter(v => v.translated).length;
+            
+            // 총 영상 시간 계산
+            const totalMinutes = savedVideos.reduce((sum, v) => {
+                if (v.duration) {
+                    return sum + Math.floor(v.duration / 60);
+                }
+                return sum;
+            }, 0);
+            if (totalDurationEl) totalDurationEl.textContent = totalMinutes + '분';
             
             // 이번 달 작업
             const thisMonth = new Date().getMonth();
-            const thisMonthWorks = works.filter(w => new Date(w.createdAt).getMonth() === thisMonth);
-            document.getElementById('this-month').textContent = thisMonthWorks.length;
-            
-            // 총 영상 시간
-            const totalMinutes = works.reduce((sum, w) => sum + (w.duration || 0), 0);
-            document.getElementById('total-duration').textContent = totalMinutes + '분';
-            
-            if (works.length === 0) {
-                emptyState.style.display = 'block';
-                worksTable.style.display = 'none';
-            } else {
-                emptyState.style.display = 'none';
-                worksTable.style.display = 'table';
-                
-                worksList.innerHTML = works.map(work => {
-                    const date = new Date(work.createdAt);
-                    const dateStr = date.getFullYear() + '.' + 
-                        String(date.getMonth() + 1).padStart(2, '0') + '.' + 
-                        String(date.getDate()).padStart(2, '0');
-                    
-                    const statusClass = work.status === 'completed' ? 'completed' : 
-                                       work.status === 'processing' ? 'processing' : 'pending';
-                    const statusText = work.status === 'completed' ? '완료' : 
-                                      work.status === 'processing' ? '진행중' : '대기';
-                    
-                    return `
-                        <tr>
-                            <td>
-                                <div class="work-title-cell">
-                                    <div class="work-thumbnail">
-                                        <i class="fas fa-play"></i>
-                                    </div>
-                                    <span class="work-name">${work.title || '제목 없음'}</span>
-                                </div>
-                            </td>
-                            <td>${dateStr}</td>
-                            <td>${work.duration || 0}분</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>
-                                <button class="action-btn" title="다운로드"><i class="fas fa-download"></i></button>
-                                <button class="action-btn" title="삭제" onclick="deleteWork('${work.id}')"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-        
-        // 작업 삭제
-        function deleteWork(id) {
-            if (confirm('이 작업을 삭제하시겠습니까?')) {
-                let works = JSON.parse(localStorage.getItem('works') || '[]');
-                works = works.filter(w => w.id !== id);
-                localStorage.setItem('works', JSON.stringify(works));
-                loadWorks();
-            }
-        }
-        
-        // 필터 탭
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                // 필터 로직 추가 가능
+            const thisMonthWorks = savedVideos.filter(v => {
+                const date = new Date(v.createdAt || v.savedAt);
+                return date.getMonth() === thisMonth;
             });
-        });
+            if (thisMonthEl) thisMonthEl.textContent = thisMonthWorks.length;
+        }
         
         // 페이지 로드 시
-        document.addEventListener('DOMContentLoaded', loadWorks);
+        document.addEventListener('DOMContentLoaded', function() {
+            // 저장 완료 플래그 확인
+            const videoSaved = localStorage.getItem('videoSaved');
+            if (videoSaved === 'true') {
+                const lastSavedVideoId = localStorage.getItem('lastSavedVideoId');
+                console.log('저장 완료 플래그 확인, 영상 ID:', lastSavedVideoId);
+                localStorage.removeItem('videoSaved');
+                localStorage.removeItem('lastSavedVideoId');
+            }
+            
+            // 영상 목록과 통계 로드
+            loadSavedVideos();
+            updateStats();
+            
+            // 저장 완료 후 새로고침
+            if (videoSaved === 'true') {
+                setTimeout(() => {
+                    loadSavedVideos();
+                    updateStats();
+                }, 500);
+            }
+        });
+
+        // 편집 모달 함수 (mypage.html에서 추가)
+        function closeEditModal() {
+            const modal = document.getElementById('edit-modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        function saveEdit() {
+            // 편집 저장 로직은 mypage.js에서 처리
+            closeEditModal();
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('edit-modal');
+            if (modal && e.target === modal) {
+                closeEditModal();
+            }
+        });
     </script>
 </body>
 </html>

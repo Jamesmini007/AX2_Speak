@@ -135,7 +135,7 @@
                 userInfoEl.style.borderRadius = '8px';
                 userInfoEl.style.transition = 'background 0.2s ease';
                 
-                // 나의 작업 버튼 생성
+                // 나의 작업 버튼 생성 (오른쪽에 표시)
                 const storageBtn = document.createElement('a');
                 storageBtn.href = getPagePath('storage.html');
                 storageBtn.className = 'my-work-link';
@@ -252,7 +252,7 @@
                 userInfoWrapper.appendChild(dropdown);
                 loginBtn.parentNode.insertBefore(userInfoWrapper, loginBtn);
                 
-                // 저장공간 버튼 추가 (userInfoWrapper 다음에)
+                // 저장공간 버튼 추가 (userInfoWrapper 다음에, 오른쪽에 표시)
                 loginBtn.parentNode.insertBefore(storageBtn, loginBtn);
                 
                 // 로그인 버튼 숨기기 (드롭다운에 로그아웃이 있으므로)
