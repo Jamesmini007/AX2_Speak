@@ -8,7 +8,7 @@
             // 네비게이션
             'nav.subtitle': '자막생성',
             'nav.pricing': '요금제/결제',
-            'nav.guide': '사용가이드',
+            'nav.guide': '사용방법',
             'nav.login': '로그인',
             'nav.signup': '가입하기',
             'nav.logout': '로그아웃',
@@ -60,8 +60,8 @@
             'index.autodetect': '자동 감지',
             'index.generate': '자막 생성',
             
-            // guide.html (사용가이드)
-            'guide.title': '사용가이드',
+            // guide.html (사용방법)
+            'guide.title': '사용방법',
             'guide.subtitle.title': '자막 생성하기',
             'guide.step1.title': '영상 업로드',
             'guide.step1.desc': '자막을 생성할 영상 파일을 드래그 앤 드롭하거나, 파일 선택 버튼을 클릭하여 업로드합니다.',

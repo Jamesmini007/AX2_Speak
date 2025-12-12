@@ -21,8 +21,8 @@
                     <a href="${htmlPath}pricing.html" class="service-tab" data-page="pricing.html">
                         <span>요금제/결제</span>
                     </a>
-                    <a href="${htmlPath}guide.html" class="service-tab" data-page="guide.html">
-                        <span>사용가이드</span>
+                    <a href="${htmlPath}used.html" class="service-tab" data-page="used.html">
+                        <span>사용방법</span>
                     </a>
                 </div>
             </div>
@@ -172,7 +172,8 @@
             if (tabPage === currentPage || 
                 (currentPage === 'index.html' && tabPage === 'index.html') ||
                 (currentPage === 'edit.html' && tabPage === 'index.html') ||
-                (currentPage === 'storage.html' && tabPage === 'index.html')) {
+                (currentPage === 'storage.html' && tabPage === 'index.html') ||
+                (currentPage === 'guide.html' && tabPage === 'used.html')) {
                 tab.classList.add('active');
             } else {
                 tab.classList.remove('active');
