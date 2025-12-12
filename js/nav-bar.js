@@ -173,7 +173,8 @@
                 (currentPage === 'index.html' && tabPage === 'index.html') ||
                 (currentPage === 'edit.html' && tabPage === 'index.html') ||
                 (currentPage === 'storage.html' && tabPage === 'index.html') ||
-                (currentPage === 'guide.html' && tabPage === 'used.html')) {
+                (currentPage === 'guide.html' && tabPage === 'used.html') ||
+                (currentPage === 'pricing.html' && tabPage === 'pricing.html')) {
                 tab.classList.add('active');
             } else {
                 tab.classList.remove('active');
