@@ -694,16 +694,6 @@
     </style>
 </head>
 <body>
-    <!-- 배경 효과 -->
-    <div class="background-effects">
-        <div class="gradient-cloud cloud-1"></div>
-        <div class="gradient-cloud cloud-2"></div>
-        <div class="gradient-cloud cloud-3"></div>
-        <canvas id="particles-canvas"></canvas>
-        <canvas id="confetti-canvas"></canvas>
-        <div class="reflection-light"></div>
-    </div>
-
     <!-- 네비게이션 바 플레이스홀더 -->
     <div id="nav-placeholder"></div>
 
@@ -1261,68 +1251,6 @@
 
         // 현재 페이지에 따라 활성 탭 설정
         document.addEventListener('DOMContentLoaded', function() {
-            // 더보기 메뉴 토글
-            const moreMenuBtn = document.getElementById('moreMenuBtn');
-            const moreMenuDropdown = document.getElementById('moreMenuDropdown');
-            
-            if (moreMenuBtn && moreMenuDropdown) {
-                moreMenuBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    moreMenuDropdown.classList.toggle('active');
-                });
-                
-                // 외부 클릭 시 메뉴 닫기
-                document.addEventListener('click', function(e) {
-                    if (!moreMenuBtn.contains(e.target) && !moreMenuDropdown.contains(e.target)) {
-                        moreMenuDropdown.classList.remove('active');
-                    }
-                });
-            }
-            
-            // 언어 설정 기능
-            const languageOptions = document.querySelectorAll('.language-dropdown-menu .language-option');
-            const currentLang = localStorage.getItem('siteLanguage') || 'ko';
-            
-            languageOptions.forEach(option => {
-                const lang = option.getAttribute('data-lang');
-                if (lang === currentLang) {
-                    option.classList.add('active');
-                    option.querySelector('.fa-check').style.display = 'inline-block';
-                } else {
-                    option.classList.remove('active');
-                    option.querySelector('.fa-check').style.display = 'none';
-                }
-                
-                option.addEventListener('click', function() {
-                    const selectedLang = this.getAttribute('data-lang');
-                    localStorage.setItem('siteLanguage', selectedLang);
-                    
-                    languageOptions.forEach(opt => {
-                        opt.classList.remove('active');
-                        opt.querySelector('.fa-check').style.display = 'none';
-                    });
-                    
-                    this.classList.add('active');
-                    this.querySelector('.fa-check').style.display = 'inline-block';
-                });
-            });
-            
-            const tabs = document.querySelectorAll('.service-tab');
-            const currentPath = window.location.pathname;
-            const currentPage = currentPath.split('/').pop() || 'index.html';
-            
-            tabs.forEach(tab => {
-                const href = tab.getAttribute('href');
-                if (href) {
-                    const tabPath = href.split('/').pop() || 'index.html';
-                    
-                    if (tabPath === currentPage) {
-                        tab.classList.add('active');
-                    } else {
-                        tab.classList.remove('active');
-                    }
-                }
-            });
 
             // 결제하기 버튼 클릭 이벤트
             document.querySelectorAll('.pricing-card-button').forEach(btn => {
