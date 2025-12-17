@@ -1860,5 +1860,843 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 페이지 로드 시 남은 시간 초기화
     initializeRemainingTime();
+
+    // ============================================
+    // 실시간 강의 번역 기능
+    // ============================================
+    const liveTranslationContainer = document.getElementById('liveTranslationContainer');
+    const eyeButtons = document.querySelectorAll('.eye-btn');
+    const controlButtonsTop = document.getElementById('controlButtonsTop');
+    const startLectureBtn = document.getElementById('startLectureBtn');
+    const stopLectureBtn = document.getElementById('stopLectureBtn');
+    const languageSettingsBtn = document.getElementById('languageSettingsBtn');
+    
+    // 현재 선택된 번역 언어들 (기본값: 영어)
+    let selectedTranslationLanguages = ['en'];
+    
+    // 초기 상태 설정: 원문 패널(한국어) + 번역 패널(영어) 표시
+    function initializeDefaultPanels() {
+        const originalPanel = document.querySelector('.language-panel.original-panel[data-lang="ko"]');
+        const englishPanel = document.querySelector('.language-panel.translation-panel[data-lang="en"]');
+        const panelsGrid = document.querySelector('.language-panels-grid');
+        
+        // 원문 패널 표시
+        if (originalPanel) {
+            originalPanel.style.display = 'flex';
+        }
+        
+        // 영어 번역 패널 표시
+        if (englishPanel) {
+            englishPanel.style.display = 'flex';
+        }
+        
+        // 나머지 번역 패널 숨기기
+        const otherTranslationPanels = document.querySelectorAll('.language-panel.translation-panel:not([data-lang="en"])');
+        otherTranslationPanels.forEach(panel => {
+            panel.style.display = 'none';
+        });
+        
+        // 그리드 레이아웃을 2개 패널에 맞게 설정
+        if (panelsGrid) {
+            panelsGrid.classList.remove('single-panel', 'two-panels', 'three-panels', 'four-panels');
+            panelsGrid.classList.add('two-panels');
+            panelsGrid.style.gridTemplateColumns = '1fr 1fr';
+        }
+        
+        // 선택된 번역 언어 초기화 (영어만)
+        selectedTranslationLanguages = ['en'];
+        
+        logger.log('기본 패널 초기화: 원문(한국어) + 번역(영어)');
+    }
+    
+    // 페이지 로드 시 초기화
+    initializeDefaultPanels();
+    
+    // 메인 컨테이너에 클래스 추가 (스타일링용)
+    const mainContainer = document.querySelector('.main-container');
+    if (mainContainer && liveTranslationContainer) {
+        mainContainer.classList.add('has-live-translation');
+    }
+    
+    // 눈 버튼 클릭 시 상단에 버튼 생성
+    const createdButtons = new Map(); // 생성된 버튼 추적
+    
+    // 눈 버튼 이벤트 핸들러 함수
+    function setupEyeButtonHandler(eyeBtn) {
+        // 기존 이벤트 리스너 제거 (중복 방지)
+        const newEyeBtn = eyeBtn.cloneNode(true);
+        eyeBtn.parentNode.replaceChild(newEyeBtn, eyeBtn);
+        
+        newEyeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const lang = this.getAttribute('data-lang');
+            const type = this.getAttribute('data-type');
+            const icon = this.querySelector('i');
+            const panel = this.closest('.language-panel');
+            
+            if (!panel || !icon) {
+                logger.error('패널 또는 아이콘을 찾을 수 없습니다');
+                return;
+            }
+            
+            // 눈 아이콘 토글
+            if (icon.classList.contains('fa-eye')) {
+                // 패널 숨기기
+                panel.style.display = 'none';
+                
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                this.classList.add('active');
+                
+                // 상단에 버튼 생성
+                if (!createdButtons.has(lang) && controlButtonsTop) {
+                    const button = createTopButton(lang, type);
+                    controlButtonsTop.appendChild(button);
+                    createdButtons.set(lang, button);
+                    logger.log('상단 버튼 생성:', lang);
+                }
+            } else {
+                // 패널 다시 표시
+                panel.style.display = 'flex';
+                
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                this.classList.remove('active');
+                
+                // 상단 버튼 제거
+                if (createdButtons.has(lang)) {
+                    const button = createdButtons.get(lang);
+                    if (button && button.parentNode) {
+                        button.remove();
+                    }
+                    createdButtons.delete(lang);
+                    logger.log('상단 버튼 제거:', lang);
+                }
+            }
+            
+            // 그리드 레이아웃 업데이트
+            updatePanelsGridLayout();
+        });
+    }
+    
+    // 모든 눈 버튼에 이벤트 리스너 추가
+    eyeButtons.forEach(eyeBtn => {
+        setupEyeButtonHandler(eyeBtn);
+    });
+    
+    // 상단 버튼 생성 함수
+    function createTopButton(lang, type) {
+        const button = document.createElement('button');
+        button.className = 'dynamic-top-button';
+        
+        // 언어 이름 매핑 (이미지 스타일: "English(영어)" 형식)
+        const langNames = {
+            'ko': 'Korean(한국어)',
+            'en': 'English(영어)',
+            'ja': '日本語(일본어)',
+            'es': 'ESPAÑOL(스페인어)',
+            'zh': '中文(간체)',
+            'zh-TW': '中文(번체)',
+            'fr': 'Français(프랑스어)',
+            'de': 'Deutsch(독일어)',
+            'pt': 'Português(포르투갈어)',
+            'it': 'Italiano(이탈리아어)',
+            'ru': 'Русский(러시아어)',
+            'vi': 'Tiếng Việt(베트남어)',
+            'th': 'ไทย(태국어)',
+            'id': 'Bahasa Indonesia(인도네시아어)',
+            'hi': 'हिन्दी(힌디어)',
+            'ar': 'العربية(아랍어)',
+            'tr': 'Türkçe(터키어)',
+            'pl': 'Polski(폴란드어)',
+            'nl': 'Nederlands(네덜란드어)',
+            'sv': 'Svenska(스웨덴어)',
+            'no': 'Norsk(노르웨이어)',
+            'da': 'Dansk(덴마크어)',
+            'fi': 'Suomi(핀란드어)',
+            'cs': 'Čeština(체코어)',
+            'hu': 'Magyar(헝가리어)',
+            'el': 'Ελληνικά(그리스어)',
+            'he': 'עברית(히브리어)',
+            'uk': 'Українська(우크라이나어)',
+            'ms': 'Bahasa Melayu(말레이어)',
+            'ro': 'Română(로마니아어)'
+        };
+        
+        const langName = langNames[lang] || lang;
+        button.textContent = langName;
+        button.setAttribute('data-lang', lang);
+        button.setAttribute('data-type', type);
+        
+        // 버튼 클릭 이벤트: 패널 다시 표시
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const panel = document.querySelector(`.language-panel[data-lang="${lang}"]`);
+            const eyeBtn = panel ? panel.querySelector('.eye-btn') : null;
+            
+            if (panel && eyeBtn) {
+                // 패널 다시 표시
+                panel.style.display = 'flex';
+                
+                // 눈 아이콘 복원
+                const icon = eyeBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                    eyeBtn.classList.remove('active');
+                }
+                
+                // 상단 버튼 제거
+                if (createdButtons.has(lang)) {
+                    const btn = createdButtons.get(lang);
+                    if (btn && btn.parentNode) {
+                        btn.remove();
+                    }
+                    createdButtons.delete(lang);
+                }
+                
+                // 그리드 레이아웃 업데이트
+                updatePanelsGridLayout();
+                
+                logger.log('패널 다시 표시:', lang);
+            } else {
+                logger.error('패널 또는 눈 버튼을 찾을 수 없습니다:', lang);
+            }
+        });
+        
+        return button;
+    }
+    
+    // 그리드 레이아웃 업데이트 함수
+    function updatePanelsGridLayout() {
+        const panelsGrid = document.querySelector('.language-panels-grid');
+        const controlsContainer = document.querySelector('.live-translation-controls');
+        if (!panelsGrid) return;
+        
+        // 표시 중인 패널 개수 계산
+        const visiblePanels = Array.from(document.querySelectorAll('.language-panel'))
+            .filter(panel => panel.style.display !== 'none');
+        const visibleCount = visiblePanels.length;
+        
+        // 모든 패널 개수 클래스 제거
+        panelsGrid.classList.remove('single-panel', 'two-panels', 'three-panels', 'four-panels');
+        
+        // 컨트롤 버튼 정렬 클래스 제거
+        if (controlsContainer) {
+            controlsContainer.classList.remove('align-single-panel', 'align-two-panels', 'align-three-panels', 'align-four-panels');
+        }
+        
+        // 패널 개수에 따라 클래스 추가 및 그리드 설정
+        if (visibleCount === 1) {
+            panelsGrid.classList.add('single-panel');
+            panelsGrid.style.gridTemplateColumns = '1fr';
+            if (controlsContainer) {
+                controlsContainer.classList.add('align-single-panel');
+            }
+        } else if (visibleCount === 2) {
+            panelsGrid.classList.add('two-panels');
+            panelsGrid.style.gridTemplateColumns = '1fr 1fr';
+            if (controlsContainer) {
+                controlsContainer.classList.add('align-two-panels');
+            }
+        } else if (visibleCount === 3) {
+            panelsGrid.classList.add('three-panels');
+            panelsGrid.style.gridTemplateColumns = '1fr 1fr 1fr';
+            if (controlsContainer) {
+                controlsContainer.classList.add('align-three-panels');
+            }
+        } else if (visibleCount >= 4) {
+            panelsGrid.classList.add('four-panels');
+            panelsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            if (controlsContainer) {
+                controlsContainer.classList.add('align-four-panels');
+            }
+        }
+    }
+    
+    // 강의 시작 버튼
+    if (startLectureBtn) {
+        startLectureBtn.addEventListener('click', function() {
+            // 강의 시작 로직 (실제 구현 필요)
+            startLiveTranslation();
+            
+            // UI 업데이트
+            startLectureBtn.style.display = 'none';
+            if (stopLectureBtn) stopLectureBtn.style.display = 'inline-flex';
+        });
+    }
+    
+    // 강의 종료 버튼
+    if (stopLectureBtn) {
+        stopLectureBtn.addEventListener('click', function() {
+            // 강의 종료 로직
+            stopLiveTranslation();
+            
+            // UI 업데이트
+            stopLectureBtn.style.display = 'none';
+            if (startLectureBtn) startLectureBtn.style.display = 'inline-flex';
+        });
+    }
+    
+    // 언어 설정 버튼
+    const liveLanguageModal = document.getElementById('liveLanguageModal');
+    const closeLiveLanguageModal = document.getElementById('closeLiveLanguageModal');
+    const liveLanguageModalBackdrop = document.getElementById('liveLanguageModalBackdrop');
+    const confirmLanguageSelection = document.getElementById('confirmLanguageSelection');
+    const selectedCountEl = document.getElementById('selectedCount');
+    const liveLanguageItems = liveLanguageModal ? liveLanguageModal.querySelectorAll('.modal-language-item') : [];
+    
+    // 언어 설정 모달 초기화: 영어 기본 선택
+    function initializeLanguageModal() {
+        liveLanguageItems.forEach(item => {
+            const lang = item.getAttribute('data-lang');
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            
+            if (lang === 'en') {
+                // 영어는 기본 선택
+                item.classList.add('selected');
+                if (checkbox) checkbox.checked = true;
+            } else {
+                item.classList.remove('selected');
+                if (checkbox) checkbox.checked = false;
+            }
+        });
+        
+        updateSelectedCount();
+        updateLanguageItemStates();
+    }
+    
+    // 페이지 로드 시 언어 설정 모달 초기화
+    if (liveLanguageModal) {
+        initializeLanguageModal();
+    }
+    
+    // 입력 언어 필드 기능
+    const inputLanguageField = document.getElementById('inputLanguageField');
+    const inputLanguageDropdown = document.getElementById('inputLanguageDropdown');
+    const inputLanguageDisplay = document.getElementById('inputLanguageDisplay');
+    const inputLanguageOptions = inputLanguageDropdown ? inputLanguageDropdown.querySelectorAll('.input-language-option') : [];
+    
+    // 현재 선택된 입력 언어 (기본값: 한국어)
+    let currentInputLanguage = 'ko';
+    
+    // 입력 언어 이름 매핑
+    const inputLanguageNames = {
+        'ko': 'Korean(한국어)',
+        'en': 'English(영어)',
+        'ja': '日本語(일본어)',
+        'zh': '中文(간체)',
+        'zh-TW': '中文(번체)',
+        'es': 'ESPAÑOL(스페인어)',
+        'fr': 'Français(프랑스어)',
+        'de': 'Deutsch(독일어)',
+        'pt': 'Português(포르투갈어)',
+        'it': 'Italiano(이탈리아어)',
+        'ru': 'Русский(러시아어)',
+        'vi': 'Tiếng Việt(베트남어)',
+        'th': 'ไทย(태국어)',
+        'id': 'Bahasa Indonesia(인도네시아어)',
+        'hi': 'हिन्दी(힌디어)',
+        'ar': 'العربية(아랍어)',
+        'tr': 'Türkçe(터키어)',
+        'pl': 'Polski(폴란드어)',
+        'nl': 'Nederlands(네덜란드어)',
+        'sv': 'Svenska(스웨덴어)',
+        'no': 'Norsk(노르웨이어)',
+        'da': 'Dansk(덴마크어)',
+        'fi': 'Suomi(핀란드어)',
+        'cs': 'Čeština(체코어)',
+        'hu': 'Magyar(헝가리어)',
+        'el': 'Ελληνικά(그리스어)',
+        'he': 'עברית(히브리어)',
+        'uk': 'Українська(우크라이나어)',
+        'ms': 'Bahasa Melayu(말레이어)',
+        'ro': 'Română(로마니아어)'
+    };
+    
+    // 입력 언어 필드 클릭 시 드롭다운 토글
+    if (inputLanguageField && inputLanguageDropdown) {
+        inputLanguageField.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isActive = inputLanguageDropdown.classList.contains('show');
+            
+            if (isActive) {
+                inputLanguageDropdown.classList.remove('show');
+                inputLanguageField.classList.remove('active');
+            } else {
+                inputLanguageDropdown.classList.add('show');
+                inputLanguageField.classList.add('active');
+            }
+        });
+        
+        // 외부 클릭 시 드롭다운 닫기
+        document.addEventListener('click', function(e) {
+            if (!inputLanguageField.contains(e.target) && !inputLanguageDropdown.contains(e.target)) {
+                inputLanguageDropdown.classList.remove('show');
+                inputLanguageField.classList.remove('active');
+            }
+        });
+    }
+    
+    // 입력 언어 옵션 선택
+    inputLanguageOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const lang = this.getAttribute('data-lang');
+            const langName = inputLanguageNames[lang] || lang;
+            
+            // 선택된 언어 업데이트
+            currentInputLanguage = lang;
+            
+            // 표시 텍스트 업데이트
+            if (inputLanguageDisplay) {
+                inputLanguageDisplay.textContent = langName;
+            }
+            
+            // 원문 패널 업데이트
+            const originalPanel = document.querySelector('.language-panel.original-panel[data-lang="ko"]');
+            if (originalPanel) {
+                // 언어 배지 업데이트
+                const languageBadge = originalPanel.querySelector('.language-badge .language-name');
+                if (languageBadge) {
+                    const badgeText = lang === 'ko' ? 'KOREAN(한국어)' : 
+                                    lang === 'en' ? 'ENGLISH(영어)' :
+                                    lang === 'ja' ? '日本語(일본어)' :
+                                    lang === 'es' ? 'ESPAÑOL(스페인어)' :
+                                    lang === 'fr' ? 'Français(프랑스어)' :
+                                    lang === 'de' ? 'Deutsch(독일어)' :
+                                    lang === 'zh' ? '中文(간체)' :
+                                    lang === 'zh-TW' ? '中文(번체)' :
+                                    inputLanguageNames[lang] || lang.toUpperCase();
+                    languageBadge.textContent = `| ${badgeText}`;
+                }
+                
+                // 패널의 data-lang 속성 업데이트
+                originalPanel.setAttribute('data-lang', lang);
+            }
+            
+            // 옵션 선택 상태 업데이트
+            inputLanguageOptions.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // 드롭다운 닫기
+            if (inputLanguageDropdown) {
+                inputLanguageDropdown.classList.remove('show');
+            }
+            if (inputLanguageField) {
+                inputLanguageField.classList.remove('active');
+            }
+            
+            logger.log('입력 언어 변경:', lang, langName);
+        });
+    });
+    
+    // 초기 선택 상태 설정 (한국어)
+    if (inputLanguageOptions.length > 0) {
+        const koreanOption = Array.from(inputLanguageOptions).find(opt => opt.getAttribute('data-lang') === 'ko');
+        if (koreanOption) {
+            koreanOption.classList.add('selected');
+        }
+    }
+    
+    if (languageSettingsBtn && liveLanguageModal) {
+        languageSettingsBtn.addEventListener('click', function() {
+            // 현재 표시 중인 언어 패널 확인
+            const visiblePanels = Array.from(document.querySelectorAll('.language-panel.translation-panel'))
+                .filter(panel => {
+                    return panel.style.display !== 'none' && panel.style.display !== '';
+                })
+                .map(panel => panel.getAttribute('data-lang'));
+            
+            // 선택된 언어 업데이트
+            selectedTranslationLanguages = visiblePanels.length > 0 ? visiblePanels : ['en'];
+            
+            // 모달의 언어 아이템들에 선택 상태 표시
+            liveLanguageItems.forEach(item => {
+                const lang = item.getAttribute('data-lang');
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                
+                if (selectedTranslationLanguages.includes(lang)) {
+                    item.classList.add('selected');
+                    if (checkbox) checkbox.checked = true;
+                } else {
+                    item.classList.remove('selected');
+                    if (checkbox) checkbox.checked = false;
+                }
+            });
+            
+            updateSelectedCount();
+            updateLanguageItemStates();
+            
+            liveLanguageModal.style.display = 'flex';
+        });
+    }
+    
+    // 모달 닫기
+    if (closeLiveLanguageModal) {
+        closeLiveLanguageModal.addEventListener('click', closeLiveLanguageModalFunc);
+    }
+    
+    if (liveLanguageModalBackdrop) {
+        liveLanguageModalBackdrop.addEventListener('click', closeLiveLanguageModalFunc);
+    }
+    
+    function closeLiveLanguageModalFunc() {
+        if (liveLanguageModal) {
+            liveLanguageModal.style.display = 'none';
+        }
+    }
+    
+    // 언어 선택/해제 (최대 3개 제한) - 체크박스 기반
+    liveLanguageItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const lang = item.getAttribute('data-lang');
+        
+        // 체크박스 변경 이벤트
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // 최대 3개 체크
+                    if (selectedTranslationLanguages.length >= 3) {
+                        this.checked = false;
+                        alert('번역 언어는 최대 3개까지 선택할 수 있습니다.');
+                        return;
+                    }
+                    
+                    // 선택
+                    item.classList.add('selected');
+                    selectedTranslationLanguages.push(lang);
+                } else {
+                    // 선택 해제
+                    item.classList.remove('selected');
+                    selectedTranslationLanguages = selectedTranslationLanguages.filter(l => l !== lang);
+                }
+                
+                updateSelectedCount();
+                updateLanguageItemStates();
+            });
+        }
+        
+        // 아이템 클릭 이벤트 (체크박스 토글)
+        item.addEventListener('click', function(e) {
+            // 체크박스 자체를 클릭한 경우는 제외
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') {
+                return;
+            }
+            
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+    
+    // 선택된 개수 업데이트
+    function updateSelectedCount() {
+        if (selectedCountEl) {
+            selectedCountEl.textContent = selectedTranslationLanguages.length;
+        }
+    }
+    
+    // 언어 아이템 상태 업데이트 (3개 선택 시 나머지 비활성화)
+    function updateLanguageItemStates() {
+        const isMaxSelected = selectedTranslationLanguages.length >= 3;
+        
+        liveLanguageItems.forEach(item => {
+            const lang = item.getAttribute('data-lang');
+            const isSelected = selectedTranslationLanguages.includes(lang);
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            
+            if (isMaxSelected && !isSelected) {
+                item.classList.add('disabled');
+                if (checkbox) checkbox.disabled = true;
+            } else {
+                item.classList.remove('disabled');
+                if (checkbox) checkbox.disabled = false;
+            }
+        });
+    }
+    
+    // 언어 패널 템플릿 데이터
+    const languagePanelTemplates = {
+        'en': { name: 'ENGLISH(영어)', displayId: 'englishTextDisplay' },
+        'ja': { name: '日本語(일본어)', displayId: 'japaneseTextDisplay' },
+        'es': { name: 'ESPAÑOL(스페인어)', displayId: 'spanishTextDisplay' },
+        'zh': { name: '中文(간체)', displayId: 'chineseTextDisplay' },
+        'zh-TW': { name: '中文(번체)', displayId: 'chineseTradTextDisplay' },
+        'fr': { name: 'Français(프랑스어)', displayId: 'frenchTextDisplay' },
+        'de': { name: 'Deutsch(독일어)', displayId: 'germanTextDisplay' },
+        'pt': { name: 'Português(포르투갈어)', displayId: 'portugueseTextDisplay' },
+        'it': { name: 'Italiano(이탈리아어)', displayId: 'italianTextDisplay' },
+        'ru': { name: 'Русский(러시아어)', displayId: 'russianTextDisplay' },
+        'vi': { name: 'Tiếng Việt(베트남어)', displayId: 'vietnameseTextDisplay' },
+        'th': { name: 'ไทย(태국어)', displayId: 'thaiTextDisplay' },
+        'id': { name: 'Bahasa Indonesia(인도네시아어)', displayId: 'indonesianTextDisplay' },
+        'hi': { name: 'हिन्दी(힌디어)', displayId: 'hindiTextDisplay' },
+        'ar': { name: 'العربية(아랍어)', displayId: 'arabicTextDisplay' },
+        'tr': { name: 'Türkçe(터키어)', displayId: 'turkishTextDisplay' },
+        'pl': { name: 'Polski(폴란드어)', displayId: 'polishTextDisplay' },
+        'nl': { name: 'Nederlands(네덜란드어)', displayId: 'dutchTextDisplay' },
+        'sv': { name: 'Svenska(스웨덴어)', displayId: 'swedishTextDisplay' },
+        'no': { name: 'Norsk(노르웨이어)', displayId: 'norwegianTextDisplay' },
+        'da': { name: 'Dansk(덴마크어)', displayId: 'danishTextDisplay' },
+        'fi': { name: 'Suomi(핀란드어)', displayId: 'finnishTextDisplay' },
+        'cs': { name: 'Čeština(체코어)', displayId: 'czechTextDisplay' },
+        'hu': { name: 'Magyar(헝가리어)', displayId: 'hungarianTextDisplay' },
+        'el': { name: 'Ελληνικά(그리스어)', displayId: 'greekTextDisplay' },
+        'he': { name: 'עברית(히브리어)', displayId: 'hebrewTextDisplay' },
+        'uk': { name: 'Українська(우크라이나어)', displayId: 'ukrainianTextDisplay' },
+        'ms': { name: 'Bahasa Melayu(말레이어)', displayId: 'malayTextDisplay' },
+        'ro': { name: 'Română(로마니아어)', displayId: 'romanianTextDisplay' }
+    };
+    
+    // 언어 패널 생성 함수
+    function createLanguagePanel(lang) {
+        const template = languagePanelTemplates[lang];
+        if (!template) return null;
+        
+        const panel = document.createElement('div');
+        panel.className = 'language-panel translation-panel';
+        panel.setAttribute('data-lang', lang);
+        panel.style.display = 'flex';
+        
+        panel.innerHTML = `
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <div class="language-badge translation-badge">
+                        <span class="language-name">| ${template.name}</span>
+                    </div>
+                    <div class="panel-label">번역</div>
+                </div>
+                <button class="eye-btn" data-lang="${lang}" data-type="translation">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="text-display" id="${template.displayId}"></div>
+            </div>
+        `;
+        
+        // 눈 버튼 이벤트 리스너 추가
+        const eyeBtn = panel.querySelector('.eye-btn');
+        if (eyeBtn) {
+            setupEyeButtonHandler(eyeBtn);
+        }
+        
+        return panel;
+    }
+    
+    // 확인 버튼 클릭
+    if (confirmLanguageSelection) {
+        confirmLanguageSelection.addEventListener('click', function() {
+            if (selectedTranslationLanguages.length === 0) {
+                alert('최소 1개의 번역 언어를 선택해주세요.');
+                return;
+            }
+            
+            const panelsGrid = document.querySelector('.language-panels-grid');
+            if (!panelsGrid) return;
+            
+            // 기존 번역 패널 모두 제거 (원문 패널 제외)
+            const existingPanels = document.querySelectorAll('.language-panel.translation-panel');
+            existingPanels.forEach(panel => panel.remove());
+            
+            // 선택된 언어에 맞게 언어 패널 생성/표시
+            selectedTranslationLanguages.forEach(lang => {
+                let panel = document.querySelector(`.language-panel.translation-panel[data-lang="${lang}"]`);
+                
+                if (!panel) {
+                    // 패널이 없으면 생성
+                    panel = createLanguagePanel(lang);
+                    if (panel) {
+                        // 원문 패널 다음에 삽입
+                        const originalPanel = document.querySelector('.language-panel.original-panel');
+                        if (originalPanel && originalPanel.nextSibling) {
+                            originalPanel.parentNode.insertBefore(panel, originalPanel.nextSibling);
+                        } else {
+                            panelsGrid.appendChild(panel);
+                        }
+                    }
+                } else {
+                    panel.style.display = 'flex';
+                }
+            });
+            
+            // 그리드 레이아웃 조정 (표시되는 패널 수에 따라)
+            const visibleCount = selectedTranslationLanguages.length;
+            const totalVisible = 1 + visibleCount; // 원문 + 번역 패널
+            
+            // 모든 패널 개수 클래스 제거
+            panelsGrid.classList.remove('single-panel', 'two-panels', 'three-panels', 'four-panels');
+            
+            // 패널 개수에 따라 클래스 추가 및 그리드 설정
+            if (totalVisible === 1) {
+                panelsGrid.classList.add('single-panel');
+                panelsGrid.style.gridTemplateColumns = '1fr';
+            } else if (totalVisible === 2) {
+                panelsGrid.classList.add('two-panels');
+                panelsGrid.style.gridTemplateColumns = '1fr 1fr';
+            } else if (totalVisible === 3) {
+                panelsGrid.classList.add('three-panels');
+                panelsGrid.style.gridTemplateColumns = '1fr 1fr 1fr';
+            } else if (totalVisible >= 4) {
+                panelsGrid.classList.add('four-panels');
+                panelsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            }
+            
+            // 레이아웃 업데이트 함수 호출
+            updatePanelsGridLayout();
+            
+            // 눈 버튼 이벤트 리스너 재등록
+            const newEyeButtons = document.querySelectorAll('.eye-btn');
+            newEyeButtons.forEach(eyeBtn => {
+                // 기존 이벤트 리스너 제거 후 새로 추가 (중복 방지)
+                const newEyeBtn = eyeBtn.cloneNode(true);
+                eyeBtn.parentNode.replaceChild(newEyeBtn, eyeBtn);
+                setupEyeButtonHandler(newEyeBtn);
+            });
+            
+            logger.log('선택된 번역 언어:', selectedTranslationLanguages);
+            
+            // 모달 닫기
+            closeLiveLanguageModalFunc();
+        });
+    }
+    
+    // 실시간 강의 번역 시작 함수
+    function startLiveTranslation() {
+        logger.log('실시간 강의 번역 시작');
+        
+        // Web Speech API를 사용한 음성 인식 (브라우저 지원 시)
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ko-KR';
+            
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                // 원문 표시
+                const originalDisplay = document.getElementById('originalTextDisplay');
+                if (originalDisplay) {
+                    originalDisplay.textContent = finalTranscript || interimTranscript;
+                }
+                
+                // 번역 처리 (실제로는 API 호출 필요)
+                if (finalTranscript) {
+                    translateText(finalTranscript);
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                logger.error('음성 인식 오류:', event.error);
+            };
+            
+            recognition.start();
+            
+            // 전역 변수로 저장하여 종료 시 사용
+            window.currentRecognition = recognition;
+        } else {
+            logger.warn('브라우저가 음성 인식을 지원하지 않습니다.');
+            // 시뮬레이션 모드
+            simulateLiveTranslation();
+        }
+    }
+    
+    // 실시간 강의 번역 종료 함수
+    function stopLiveTranslation() {
+        logger.log('실시간 강의 번역 종료');
+        
+        if (window.currentRecognition) {
+            window.currentRecognition.stop();
+            window.currentRecognition = null;
+        }
+        
+        // 시뮬레이션 인터벌 정리
+        if (window.simulationInterval) {
+            clearInterval(window.simulationInterval);
+            window.simulationInterval = null;
+        }
+        
+        // 생성된 상단 버튼 모두 제거
+        createdButtons.forEach((button, lang) => {
+            button.remove();
+            createdButtons.delete(lang);
+        });
+        
+        // 눈 버튼 상태 초기화
+        eyeButtons.forEach(eyeBtn => {
+            const icon = eyeBtn.querySelector('i');
+            if (icon.classList.contains('fa-eye-slash')) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                eyeBtn.classList.remove('active');
+            }
+        });
+    }
+    
+    // 텍스트 번역 함수 (시뮬레이션)
+    function translateText(text) {
+        // 실제로는 번역 API 호출 필요
+        const translations = {
+            'en': `Translation: ${text}`,
+            'ja': `翻訳: ${text}`,
+            'es': `Traducción: ${text}`
+        };
+        
+        // 각 언어 패널에 번역 표시
+        Object.keys(translations).forEach(lang => {
+            const display = document.getElementById(`${lang === 'en' ? 'english' : lang === 'ja' ? 'japanese' : 'spanish'}TextDisplay`);
+            if (display) {
+                display.textContent = translations[lang];
+            }
+        });
+    }
+    
+    // 시뮬레이션 모드 (음성 인식 미지원 시)
+    function simulateLiveTranslation() {
+        const sampleTexts = [
+            '안녕하세요, 오늘 강의를 시작하겠습니다.',
+            '이번 시간에는 실시간 번역 기능에 대해 알아보겠습니다.',
+            '질문이 있으시면 언제든지 말씀해 주세요.',
+            '감사합니다.'
+        ];
+        
+        let textIndex = 0;
+        const interval = setInterval(() => {
+            if (textIndex < sampleTexts.length) {
+                const text = sampleTexts[textIndex];
+                const originalDisplay = document.getElementById('originalTextDisplay');
+                if (originalDisplay) {
+                    originalDisplay.textContent = text;
+                }
+                translateText(text);
+                textIndex++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 3000);
+        
+        // 전역 변수로 저장하여 종료 시 사용
+        window.simulationInterval = interval;
+    }
 });
 
