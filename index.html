@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>실시간 언어 번역 - AX2</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="chatbot/chatbot.css">
+</head>
+<body>
+    <!-- 네비게이션 바 플레이스홀더 -->
+    <div id="nav-placeholder"></div>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-container">
+        <!-- 실시간 강의 번역 인터페이스 -->
+        <div class="live-translation-container" id="liveTranslationContainer">
+            <!-- 상단 컨트롤 버튼 영역 -->
+            <div class="live-translation-controls">
+                <div class="control-buttons-top" id="controlButtonsTop">
+                    <!-- 동적으로 생성되는 버튼들이 여기에 표시됩니다 -->
+                </div>
+                <div class="control-buttons-right">
+                    <button class="control-btn" id="languageSettingsBtn">
+                        <i class="fas fa-cog"></i>
+                        언어 설정
+                    </button>
+                    <button class="control-btn start-btn" id="startLectureBtn">
+                        <i class="fas fa-play"></i>
+                        시작
+                    </button>
+                    <button class="control-btn stop-btn" id="stopLectureBtn" style="display: none;">
+                        <i class="fas fa-stop"></i>
+                        종료
+                    </button>
+                </div>
+            </div>
+
+            <!-- 언어 패널 그리드 -->
+            <div class="language-panels-grid">
+                <!-- 한국어 원문 패널 -->
+                <div class="language-panel original-panel" data-lang="ko">
+                    <div class="panel-header">
+                        <div class="panel-header-left">
+                            <div class="language-badge original-badge">
+                                <span class="language-name">| KOREAN(한국어)</span>
+                            </div>
+                            <div class="panel-label">원문</div>
+                        </div>
+                        <button class="eye-btn" data-lang="ko" data-type="original">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="text-display" id="originalTextDisplay"></div>
+                    </div>
+                </div>
+
+                <!-- 영어 번역 패널 -->
+                <div class="language-panel translation-panel" data-lang="en" style="display: flex;">
+                    <div class="panel-header">
+                        <div class="panel-header-left">
+                            <div class="language-badge translation-badge">
+                                <span class="language-name">| ENGLISH(영어)</span>
+                            </div>
+                            <div class="panel-label">번역</div>
+                        </div>
+                        <button class="eye-btn" data-lang="en" data-type="translation">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="text-display" id="englishTextDisplay"></div>
+                    </div>
+                </div>
+
+                <!-- 일본어 번역 패널 -->
+                <div class="language-panel translation-panel" data-lang="ja" style="display: none;">
+                    <div class="panel-header">
+                        <div class="panel-header-left">
+                            <div class="language-badge translation-badge">
+                                <span class="language-name">| 日本語(일본어)</span>
+                            </div>
+                            <div class="panel-label">번역</div>
+                        </div>
+                        <button class="eye-btn" data-lang="ja" data-type="translation">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="text-display" id="japaneseTextDisplay"></div>
+                    </div>
+                </div>
+
+                <!-- 스페인어 번역 패널 -->
+                <div class="language-panel translation-panel" data-lang="es" style="display: none;">
+                    <div class="panel-header">
+                        <div class="panel-header-left">
+                            <div class="language-badge translation-badge">
+                                <span class="language-name">| ESPAÑOL(스페인어)</span>
+                            </div>
+                            <div class="panel-label">번역</div>
+                        </div>
+                        <button class="eye-btn" data-lang="es" data-type="translation">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="text-display" id="spanishTextDisplay"></div>
+                    </div>
+                </div>
+                
+                <!-- 동적으로 추가될 수 있는 다른 언어 패널들을 위한 템플릿 -->
+                <!-- 프랑스어, 독일어, 중국어 등은 필요시 JavaScript로 동적 생성 -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 번역 설정 모달 -->
+    <div class="translation-modal" id="translationModal" style="display: none;">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-content-wrapper">
+            <div class="right-panel" id="rightPanel">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-cog"></i>
+                        실시간 번역 설정
+                    </h2>
+                    <button class="modal-close-btn" id="closeTranslationModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <!-- 비디오 미리보기 -->
+                <div class="video-preview-container" id="videoPreviewContainer" style="display: none;">
+                    <video class="video-preview" id="videoPreview" controls preload="metadata">
+                        <source src="" type="video/mp4">
+                    </video>
+                    <div class="video-preview-info">
+                        <span class="video-preview-name" id="videoPreviewName"></span>
+                        <span class="video-preview-size" id="videoPreviewSize"></span>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <!-- Original Language -->
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <i class="fas fa-microphone"></i>
+                            원본 언어
+                        </label>
+                        <div class="select-wrapper">
+                            <select class="glass-select" id="originalLang">
+                                <option value="auto">자동 감지</option>
+                                <option value="ko">한국어</option>
+                                <option value="en">영어</option>
+                                <option value="ja">일본어</option>
+                                <option value="zh">중국어(간체)</option>
+                                <option value="zh-TW">중국어(번체)</option>
+                                <option value="es">스페인어</option>
+                                <option value="fr">프랑스어</option>
+                                <option value="de">독일어</option>
+                                <option value="pt">포르투갈어</option>
+                                <option value="it">이탈리아어</option>
+                                <option value="ru">러시아어</option>
+                                <option value="vi">베트남어</option>
+                                <option value="th">태국어</option>
+                                <option value="id">인도네시아어</option>
+                                <option value="hi">힌디어</option>
+                                <option value="ar">아랍어</option>
+                                <option value="tr">터키어</option>
+                                <option value="pl">폴란드어</option>
+                                <option value="nl">네덜란드어</option>
+                                <option value="sv">스웨덴어</option>
+                                <option value="no">노르웨이어</option>
+                                <option value="da">덴마크어</option>
+                                <option value="fi">핀란드어</option>
+                                <option value="cs">체코어</option>
+                                <option value="hu">헝가리어</option>
+                                <option value="el">그리스어</option>
+                                <option value="he">히브리어</option>
+                                <option value="uk">우크라이나어</option>
+                                <option value="ms">말레이어</option>
+                                <option value="ro">로마니아어</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- Target Languages -->
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <i class="fas fa-globe"></i>
+                            번역 언어 (최대 3개)
+                        </label>
+                        <div class="language-chips" id="languageChips">
+                            <button class="add-language-btn">
+                                <i class="fas fa-plus"></i>
+                                언어 추가
+                            </button>
+                        </div>
+                        <p class="info-text" style="font-size: 0.75rem; color: #666; margin-top: 4px;">
+                            번역 언어는 최대 3개까지 선택할 수 있습니다.
+                        </p>
+                    </div>
+
+                    <!-- Translate Now 버튼 -->
+                    <button class="translate-btn" id="translateBtn">
+                        <span>번역하기</span>
+                        <span class="credit-info" id="creditInfo" style="display: none;"></span>
+                    </button>
+
+                    <!-- 번역 진행률 표시 -->
+                    <div class="translation-progress-container" id="translationProgressContainer" style="display: none;">
+                        <div class="progress-info">
+                            <span class="progress-text" id="progressText">번역 준비 중...</span>
+                            <span class="progress-percent" id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 정보 텍스트 -->
+                    <div class="info-text" id="infoText">
+                        <i class="fas fa-sparkles"></i>
+                        <span>실시간으로 음성을 인식하고 번역합니다.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 실시간 강의 번역용 언어 설정 모달 -->
+    <div class="live-language-modal" id="liveLanguageModal" style="display: none;">
+        <div class="modal-backdrop" id="liveLanguageModalBackdrop"></div>
+        <div class="modal-content-wrapper">
+            <div class="modal-content">
+                <!-- 헤더 섹션 -->
+                <div class="language-modal-header">
+                    <div class="language-icon-wrapper">
+                        <div class="language-icon-circle">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                    <h2 class="language-modal-title">언어 설정</h2>
+                    <p class="language-modal-subtitle">원하는 언어를 선택하세요</p>
+                    <button class="modal-close-top" id="closeLiveLanguageModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- 입력 언어 섹션 -->
+                    <div class="language-section">
+                        <h3 class="section-title">입력 언어</h3>
+                        <div class="input-language-wrapper">
+                            <div class="input-language-field" id="inputLanguageField">
+                                <span id="inputLanguageDisplay">Korean(한국어)</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="input-language-dropdown" id="inputLanguageDropdown">
+                                <div class="input-language-search">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="inputLanguageSearch" placeholder="언어 검색..." autocomplete="off">
+                                </div>
+                                <div class="input-language-options">
+                                <div class="input-language-option" data-lang="ko">
+                                    <span>Korean(한국어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="en">
+                                    <span>English(영어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="ja">
+                                    <span>日本語(일본어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="zh">
+                                    <span>中文(간체)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="zh-TW">
+                                    <span>中文(번체)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="es">
+                                    <span>ESPAÑOL(스페인어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="fr">
+                                    <span>Français(프랑스어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="de">
+                                    <span>Deutsch(독일어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="pt">
+                                    <span>Português(포르투갈어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="it">
+                                    <span>Italiano(이탈리아어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="ru">
+                                    <span>Русский(러시아어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="vi">
+                                    <span>Tiếng Việt(베트남어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="th">
+                                    <span>ไทย(태국어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="id">
+                                    <span>Bahasa Indonesia(인도네시아어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="hi">
+                                    <span>हिन्दी(힌디어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="ar">
+                                    <span>العربية(아랍어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="tr">
+                                    <span>Türkçe(터키어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="pl">
+                                    <span>Polski(폴란드어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="nl">
+                                    <span>Nederlands(네덜란드어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="sv">
+                                    <span>Svenska(스웨덴어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="no">
+                                    <span>Norsk(노르웨이어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="da">
+                                    <span>Dansk(덴마크어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="fi">
+                                    <span>Suomi(핀란드어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="cs">
+                                    <span>Čeština(체코어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="hu">
+                                    <span>Magyar(헝가리어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="el">
+                                    <span>Ελληνικά(그리스어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="he">
+                                    <span>עברית(히브리어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="uk">
+                                    <span>Українська(우크라이나어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="ms">
+                                    <span>Bahasa Melayu(말레이어)</span>
+                                </div>
+                                <div class="input-language-option" data-lang="ro">
+                                    <span>Română(로마니아어)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 출력 언어 섹션 -->
+                    <div class="language-section output-language-section">
+                        <h3 class="section-title">출력 언어</h3>
+                        <div class="selection-info">
+                            <p>실시간 번역 언어를 최대 3개까지 선택할 수 있습니다. (<span id="selectedCount">0</span>/3)</p>
+                        </div>
+                        <div class="output-language-wrapper">
+                            <div class="output-language-field" id="outputLanguageField">
+                                <span id="outputLanguageDisplay">언어를 선택하세요</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="output-language-dropdown" id="outputLanguageDropdown">
+                                <div class="output-language-search">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="outputLanguageSearch" placeholder="언어 검색..." autocomplete="off">
+                                </div>
+                                <div class="output-language-options" id="outputLanguageOptions">
+                                    <div class="output-language-option" data-lang="en">
+                                        <span>English(영어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="ja">
+                                        <span>日本語(일본어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="es">
+                                        <span>ESPAÑOL(스페인어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="zh">
+                                        <span>中文(간체)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="zh-TW">
+                                        <span>中文(번체)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="fr">
+                                        <span>Français(프랑스어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="de">
+                                        <span>Deutsch(독일어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="pt">
+                                        <span>Português(포르투갈어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="it">
+                                        <span>Italiano(이탈리아어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="ru">
+                                        <span>Русский(러시아어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="vi">
+                                        <span>Tiếng Việt(베트남어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="th">
+                                        <span>ไทย(태국어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="id">
+                                        <span>Bahasa Indonesia(인도네시아어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="hi">
+                                        <span>हिन्दी(힌디어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="ar">
+                                        <span>العربية(아랍어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="tr">
+                                        <span>Türkçe(터키어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="pl">
+                                        <span>Polski(폴란드어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="nl">
+                                        <span>Nederlands(네덜란드어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="sv">
+                                        <span>Svenska(스웨덴어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="no">
+                                        <span>Norsk(노르웨이어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="da">
+                                        <span>Dansk(덴마크어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="fi">
+                                        <span>Suomi(핀란드어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="cs">
+                                        <span>Čeština(체코어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="hu">
+                                        <span>Magyar(헝가리어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="el">
+                                        <span>Ελληνικά(그리스어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="he">
+                                        <span>עברית(히브리어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="uk">
+                                        <span>Українська(우크라이나어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="ms">
+                                        <span>Bahasa Melayu(말레이어)</span>
+                                    </div>
+                                    <div class="output-language-option" data-lang="ro">
+                                        <span>Română(로마니아어)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 기존 language-grid는 숨김 처리 (하위 호환성) -->
+                        <div class="language-grid" style="display: none;">
+                        <div class="modal-language-item" data-lang="en">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-en" data-lang="en">
+                                <label for="lang-en"></label>
+                            </div>
+                            <span>English(영어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="ja">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-ja" data-lang="ja">
+                                <label for="lang-ja"></label>
+                            </div>
+                            <span>日本語(일본어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="es">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-es" data-lang="es">
+                                <label for="lang-es"></label>
+                            </div>
+                            <span>ESPAÑOL(스페인어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="zh">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-zh" data-lang="zh">
+                                <label for="lang-zh"></label>
+                            </div>
+                            <span>中文(중국어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="zh-TW">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-zh-tw" data-lang="zh-TW">
+                                <label for="lang-zh-tw"></label>
+                            </div>
+                            <span>中文(번체)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="fr">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-fr" data-lang="fr">
+                                <label for="lang-fr"></label>
+                            </div>
+                            <span>Français(프랑스어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="de">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-de" data-lang="de">
+                                <label for="lang-de"></label>
+                            </div>
+                            <span>Deutsch(독일어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="pt">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-pt" data-lang="pt">
+                                <label for="lang-pt"></label>
+                            </div>
+                            <span>Português(포르투갈어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="it">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-it" data-lang="it">
+                                <label for="lang-it"></label>
+                            </div>
+                            <span>Italiano(이탈리아어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="ru">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-ru" data-lang="ru">
+                                <label for="lang-ru"></label>
+                            </div>
+                            <span>Русский(러시아어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="vi">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-vi" data-lang="vi">
+                                <label for="lang-vi"></label>
+                            </div>
+                            <span>Tiếng Việt(베트남어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="th">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-th" data-lang="th">
+                                <label for="lang-th"></label>
+                            </div>
+                            <span>ไทย(태국어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="id">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-id" data-lang="id">
+                                <label for="lang-id"></label>
+                            </div>
+                            <span>Bahasa Indonesia(인도네시아어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="hi">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-hi" data-lang="hi">
+                                <label for="lang-hi"></label>
+                            </div>
+                            <span>हिन्दी(힌디어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="ar">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-ar" data-lang="ar">
+                                <label for="lang-ar"></label>
+                            </div>
+                            <span>العربية(아랍어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="tr">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-tr" data-lang="tr">
+                                <label for="lang-tr"></label>
+                            </div>
+                            <span>Türkçe(터키어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="pl">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-pl" data-lang="pl">
+                                <label for="lang-pl"></label>
+                            </div>
+                            <span>Polski(폴란드어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="nl">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-nl" data-lang="nl">
+                                <label for="lang-nl"></label>
+                            </div>
+                            <span>Nederlands(네덜란드어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="sv">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-sv" data-lang="sv">
+                                <label for="lang-sv"></label>
+                            </div>
+                            <span>Svenska(스웨덴어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="no">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-no" data-lang="no">
+                                <label for="lang-no"></label>
+                            </div>
+                            <span>Norsk(노르웨이어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="da">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-da" data-lang="da">
+                                <label for="lang-da"></label>
+                            </div>
+                            <span>Dansk(덴마크어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="fi">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-fi" data-lang="fi">
+                                <label for="lang-fi"></label>
+                            </div>
+                            <span>Suomi(핀란드어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="cs">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-cs" data-lang="cs">
+                                <label for="lang-cs"></label>
+                            </div>
+                            <span>Čeština(체코어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="hu">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-hu" data-lang="hu">
+                                <label for="lang-hu"></label>
+                            </div>
+                            <span>Magyar(헝가리어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="el">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-el" data-lang="el">
+                                <label for="lang-el"></label>
+                            </div>
+                            <span>Ελληνικά(그리스어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="he">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-he" data-lang="he">
+                                <label for="lang-he"></label>
+                            </div>
+                            <span>עברית(히브리어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="uk">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-uk" data-lang="uk">
+                                <label for="lang-uk"></label>
+                            </div>
+                            <span>Українська(우크라이나어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="ms">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-ms" data-lang="ms">
+                                <label for="lang-ms"></label>
+                            </div>
+                            <span>Bahasa Melayu(말레이어)</span>
+                        </div>
+                        <div class="modal-language-item" data-lang="ro">
+                            <div class="language-checkbox">
+                                <input type="checkbox" id="lang-ro" data-lang="ro">
+                                <label for="lang-ro"></label>
+                            </div>
+                            <span>Română(로마니아어)</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="confirm-btn" id="confirmLanguageSelection">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 언어 선택 모달 -->
+    <div class="language-modal" id="languageModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>번역 언어 선택</h3>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="language-grid">
+                    <div class="modal-language-item" data-lang="ko">
+                        <span>한국어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="en">
+                        <span>영어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="ja">
+                        <span>일본어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="zh">
+                        <span>중국어(간체)</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="zh-TW">
+                        <span>중국어(번체)</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="es">
+                        <span>스페인어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="fr">
+                        <span>프랑스어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="de">
+                        <span>독일어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="pt">
+                        <span>포르투갈어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="it">
+                        <span>이탈리아어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="ru">
+                        <span>러시아어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="vi">
+                        <span>베트남어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="th">
+                        <span>태국어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="id">
+                        <span>인도네시아어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="hi">
+                        <span>힌디어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="ar">
+                        <span>아랍어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="tr">
+                        <span>터키어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="pl">
+                        <span>폴란드어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="nl">
+                        <span>네덜란드어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="sv">
+                        <span>스웨덴어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="no">
+                        <span>노르웨이어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="da">
+                        <span>덴마크어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="fi">
+                        <span>핀란드어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="cs">
+                        <span>체코어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="hu">
+                        <span>헝가리어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="el">
+                        <span>그리스어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="he">
+                        <span>히브리어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="uk">
+                        <span>우크라이나어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="ms">
+                        <span>말레이어</span>
+                    </div>
+                    <div class="modal-language-item" data-lang="ro">
+                        <span>로마니아어</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js" defer></script>
+    <script src="js/nav-bar.js" defer></script>
+    <script src="js/auth-state.js?v=20231211" defer></script>
+    <script src="script.js?v=20231211" defer></script>
+    <script src="chatbot/data.js"></script>
+    <script src="chatbot/chatbot.js"></script>
+</body>
+</html>
