@@ -413,7 +413,6 @@
     font-size: 14px;
 }
 
-.translation-btn-share,
 .translation-btn-delete {
     width: 44px;
     height: 44px;
@@ -424,18 +423,6 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-}
-
-.translation-btn-share {
-    background: #F5F5F5;
-    color: #666;
-}
-
-.translation-btn-share:hover {
-    background: #E0E0E0;
-}
-
-.translation-btn-delete {
     background: #FEE2E2;
     color: #DC2626;
 }
@@ -444,7 +431,6 @@
     background: #FECACA;
 }
 
-.translation-btn-share i,
 .translation-btn-delete i {
     font-size: 16px;
 }

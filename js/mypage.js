@@ -298,9 +298,6 @@
                                         <i class="fas fa-download"></i>
                                         <span>다운로드</span>
                                     </button>
-                                    <button class="translation-btn-share" onclick="event.stopPropagation(); shareVideo('${video.id}')">
-                                        <i class="fas fa-share-alt"></i>
-                                    </button>
                                     <button class="translation-btn-delete" onclick="event.stopPropagation(); deleteVideo(${originalIndex})">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -357,9 +354,6 @@
                                 ${(video.isFreeTrial || video.downloadable === false) 
                                     ? '<button class="btn-download disabled" disabled><i class="fas fa-download"></i> 다운로드</button>' 
                                     : `<button class="btn-download" onclick="event.stopPropagation(); downloadVideo(${originalIndex})"><i class="fas fa-download"></i> 다운로드</button>`}
-                                <button class="btn-share" onclick="event.stopPropagation(); shareVideo('${video.id}')">
-                                    <i class="fas fa-share-alt"></i>
-                                </button>
                                 <button class="btn-delete" onclick="event.stopPropagation(); deleteVideo(${originalIndex})">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -1130,151 +1124,6 @@
             alert('영상이 삭제되었습니다.');
         }
         
-        // 영상 공유 기능
-        function shareVideo(videoId) {
-            const video = videos.find(v => v.id === videoId);
-            if (!video) {
-                alert('영상을 찾을 수 없습니다.');
-                return;
-            }
-
-            // 공유 링크 생성 (실제로는 서버에서 생성해야 하지만, 여기서는 클라이언트에서 생성)
-            const shareLink = `${window.location.origin}${window.location.pathname}?share=${videoId}`;
-            
-            // 공유 모달 표시
-            showShareModal(video, shareLink);
-        }
-
-        // 공유 모달 표시
-        function showShareModal(video, shareLink) {
-            // 기존 모달이 있으면 제거
-            const existingModal = document.getElementById('share-modal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // 모달 생성
-            const modal = document.createElement('div');
-            modal.id = 'share-modal';
-            modal.className = 'share-modal';
-            modal.innerHTML = `
-                <div class="share-modal-backdrop" onclick="closeShareModal()"></div>
-                <div class="share-modal-content">
-                    <div class="share-modal-header">
-                        <h3>
-                            <i class="fas fa-share-alt"></i>
-                            강의 공유
-                        </h3>
-                        <button class="share-modal-close" onclick="closeShareModal()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="share-modal-body">
-                        <div class="share-video-info">
-                            <div class="share-video-title">${video.title || '강의 제목'}</div>
-                            <div class="share-video-meta">
-                                ${video.duration ? `재생 시간: ${formatDuration(video.duration)}` : ''}
-                                ${video.targetLanguages && video.targetLanguages.length > 0 ? `<br>번역 언어: ${video.targetLanguages.map(l => l.name || l.code).join(', ')}` : ''}
-                            </div>
-                        </div>
-                        <div class="share-link-section">
-                            <label class="share-label">공유 링크</label>
-                            <div class="share-link-input-wrapper">
-                                <input type="text" class="share-link-input" id="share-link-input" value="${shareLink}" readonly>
-                                <button class="share-copy-btn" onclick="copyShareLink()">
-                                    <i class="fas fa-copy"></i>
-                                    복사
-                                </button>
-                            </div>
-                        </div>
-                        <div class="share-options">
-                            <button class="share-option-btn" onclick="shareToSocial('facebook', '${shareLink}')">
-                                <i class="fab fa-facebook"></i>
-                                Facebook
-                            </button>
-                            <button class="share-option-btn" onclick="shareToSocial('twitter', '${shareLink}')">
-                                <i class="fab fa-twitter"></i>
-                                Twitter
-                            </button>
-                            <button class="share-option-btn" onclick="shareToSocial('kakao', '${shareLink}')">
-                                <i class="fas fa-comment"></i>
-                                카카오톡
-                            </button>
-                            <button class="share-option-btn" onclick="shareToSocial('email', '${shareLink}')">
-                                <i class="fas fa-envelope"></i>
-                                이메일
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        // 공유 링크 복사
-        function copyShareLink() {
-            const shareLinkInput = document.getElementById('share-link-input');
-            if (shareLinkInput) {
-                shareLinkInput.select();
-                document.execCommand('copy');
-                
-                // 복사 확인 메시지
-                const copyBtn = document.querySelector('.share-copy-btn');
-                if (copyBtn) {
-                    const originalText = copyBtn.innerHTML;
-                    copyBtn.innerHTML = '<i class="fas fa-check"></i> 복사됨';
-                    copyBtn.style.background = '#4caf50';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalText;
-                        copyBtn.style.background = '';
-                    }, 2000);
-                }
-            }
-        }
-
-        // 소셜 미디어 공유
-        function shareToSocial(platform, link) {
-            const title = encodeURIComponent('AX2 강의 공유');
-            const text = encodeURIComponent('이 강의를 확인해보세요!');
-            
-            let shareUrl = '';
-            switch(platform) {
-                case 'facebook':
-                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
-                    break;
-                case 'twitter':
-                    shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}&text=${text}`;
-                    break;
-                case 'kakao':
-                    // 카카오톡 공유는 Kakao SDK가 필요하지만, 여기서는 링크만 제공
-                    if (navigator.share) {
-                        navigator.share({
-                            title: title,
-                            text: text,
-                            url: link
-                        });
-                        return;
-                    }
-                    alert('카카오톡 공유는 모바일에서만 가능합니다.');
-                    return;
-                case 'email':
-                    shareUrl = `mailto:?subject=${title}&body=${text}%20${encodeURIComponent(link)}`;
-                    window.location.href = shareUrl;
-                    return;
-            }
-            
-            if (shareUrl) {
-                window.open(shareUrl, '_blank', 'width=600,height=400');
-            }
-        }
-
-        // 공유 모달 닫기
-        function closeShareModal() {
-            const modal = document.getElementById('share-modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
 
         // 자막 미리보기 표시/숨김
         function toggleSubtitlePreview(videoId) {
@@ -1310,10 +1159,6 @@
         }
 
         // 전역 함수로 등록
-        window.shareVideo = shareVideo;
-        window.copyShareLink = copyShareLink;
-        window.shareToSocial = shareToSocial;
-        window.closeShareModal = closeShareModal;
         window.toggleSubtitlePreview = toggleSubtitlePreview;
         window.deleteVideo = deleteVideo;
 

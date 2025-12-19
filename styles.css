@@ -110,7 +110,7 @@ body {
 }
 
 .logo-img {
-    height: 45px;
+    height: 57px;
     width: auto;
     object-fit: contain;
 }
@@ -140,7 +140,7 @@ body {
     border: none;
     background: transparent;
     color: #666666;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -197,7 +197,7 @@ body {
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: 12px;
     position: relative;
     flex-shrink: 0;
 }
@@ -205,7 +205,7 @@ body {
 /* 크레딧 표시 */
 .credit-display {
     color: #FF9800;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     margin-right: 16px;
     white-space: nowrap;
@@ -260,7 +260,7 @@ body {
     padding: 0;
     margin-left: 8px;
     color: #666;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -331,7 +331,7 @@ body {
     color: #ffffff;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
@@ -350,7 +350,7 @@ body {
     color: #FF9800;
     border: 1px solid #FF9800;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
@@ -1823,7 +1823,7 @@ body {
     
     .service-tab {
         padding: 8px 14px;
-        font-size: 14px;
+        font-size: 15px;
     }
     
     .plan-info {
@@ -1991,7 +1991,7 @@ body {
     }
     
     .logo-img {
-        height: 24px;
+        height: 32px;
     }
     
     
@@ -2008,7 +2008,7 @@ body {
     
     .service-tab {
         padding: 6px 10px;
-        font-size: 12px;
+        font-size: 13px;
         flex: 1;
         min-width: 120px;
     }
@@ -3716,10 +3716,17 @@ html[lang="zh-TW"] .mega-submenu {
 /* 언어 섹션 */
 .language-section {
     margin-bottom: 32px;
+    border-bottom: none;
 }
 
 .language-section:last-child {
     margin-bottom: 0;
+}
+
+/* 출력 언어 섹션을 이미지 아래로 더 내리기 */
+.live-language-modal .output-language-section {
+    margin-top: 48px;
+    border-bottom: none;
 }
 
 .section-title {
@@ -4145,7 +4152,7 @@ html[lang="zh-TW"] .mega-submenu {
     display: flex;
     justify-content: flex-end;
     padding-top: 20px;
-    border-top: 1px solid #E5E7EB;
+    border-top: none;
 }
 
 .live-language-modal .confirm-btn {
