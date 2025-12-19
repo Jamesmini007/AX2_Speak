@@ -234,23 +234,6 @@ body {
     color: #333;
 }
 
-/* 번역기록 링크 */
-.translation-history-link {
-    display: flex;
-    align-items: center;
-    padding: 0;
-    margin-left: 16px;
-    color: #666;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    white-space: nowrap;
-}
-
-.translation-history-link:hover {
-    color: #333;
-}
 
 /* 나의 작업 링크 */
 .my-work-link {
@@ -267,6 +250,24 @@ body {
 }
 
 .my-work-link:hover {
+    color: #333;
+}
+
+/* 번역기록 링크 */
+.translation-history-link {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: 8px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.translation-history-link:hover {
     color: #333;
 }
 
@@ -3128,7 +3129,7 @@ body {
 /* 서브메뉴 스타일 */
 .mega-submenu {
     position: absolute;
-    right: 140px;
+    right: 180px;
     top: 0;
     bottom: 0;
     width: 180px;
@@ -3141,6 +3142,16 @@ body {
     z-index: 10001;
     box-sizing: border-box;
     border-left: 1px solid #f0f0f0;
+}
+
+/* 한국어, 영어, 일본어, 중국어로 변경했을 때 서브메뉴를 약간 오른쪽으로 이동 */
+html[lang="ko"] .mega-submenu,
+html[lang="en"] .mega-submenu,
+html[lang="ja"] .mega-submenu,
+html[lang="zh"] .mega-submenu,
+html[lang="zh-CN"] .mega-submenu,
+html[lang="zh-TW"] .mega-submenu {
+    right: 160px;
 }
 
 .mega-submenu.active {
@@ -3173,7 +3184,7 @@ body {
 }
 
 .mega-submenu-item.language-option {
-    justify-content: flex-start;
+    justify-content: flex-end;
     flex-direction: row;
     text-decoration: none !important;
     border: none !important;
@@ -3196,12 +3207,13 @@ body {
 .mega-submenu-item.language-option span {
     text-decoration: none !important;
     border: none !important;
+    text-align: right;
 }
 
 .mega-submenu-item.language-option i.fa-check {
     color: #10b981;
-    order: -1;
-    margin-right: 10px;
+    order: 1;
+    margin-left: 10px;
 }
 
 /* 블러 효과 */

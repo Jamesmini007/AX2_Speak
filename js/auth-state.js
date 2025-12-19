@@ -58,41 +58,23 @@
     }
     
     // 사용자 정보 표시 (요금제 + 이름)
-    let isUpdatingUserInfo = false; // 실행 중 플래그
     function updateUserInfo() {
-        // 이미 실행 중이면 무시
-        if (isUpdatingUserInfo) {
-            return;
+        // 기존 user-info-wrapper 전체 제거
+        const existingUserInfoWrapper = document.querySelector('.user-info-wrapper');
+        if (existingUserInfoWrapper) {
+            existingUserInfoWrapper.remove();
         }
-        isUpdatingUserInfo = true;
         
-        // 기존 요소 모두 제거 (중복 방지) - 문서 전체에서 먼저 제거
-        const allCreditEls = document.querySelectorAll('.credit-display');
-        allCreditEls.forEach(el => el.remove());
+        // 기존 나의 작업 버튼 제거
+        const existingStorageBtn = document.querySelector('.my-work-link');
+        if (existingStorageBtn) {
+            existingStorageBtn.remove();
+        }
         
-        const allTranslationHistoryBtns = document.querySelectorAll('.translation-history-link');
-        allTranslationHistoryBtns.forEach(el => el.remove());
-        
-        const allStorageBtns = document.querySelectorAll('.my-work-link');
-        allStorageBtns.forEach(el => el.remove());
-        
-        const allUserInfoWrappers = document.querySelectorAll('.user-info-wrapper');
-        allUserInfoWrappers.forEach(el => el.remove());
-        
-        // navRight 내에서도 한 번 더 확인
-        const navRight = document.querySelector('.nav-right');
-        if (navRight) {
-            const existingCreditEls = navRight.querySelectorAll('.credit-display');
-            existingCreditEls.forEach(el => el.remove());
-            
-            const existingTranslationHistoryBtns = navRight.querySelectorAll('.translation-history-link');
-            existingTranslationHistoryBtns.forEach(el => el.remove());
-            
-            const existingStorageBtns = navRight.querySelectorAll('.my-work-link');
-            existingStorageBtns.forEach(el => el.remove());
-            
-            const existingUserInfoWrappers = navRight.querySelectorAll('.user-info-wrapper');
-            existingUserInfoWrappers.forEach(el => el.remove());
+        // 기존 번역기록 버튼 제거
+        const existingTranslationHistoryBtn = document.querySelector('.translation-history-link');
+        if (existingTranslationHistoryBtn) {
+            existingTranslationHistoryBtn.remove();
         }
         
         // plan-info-box 처리
@@ -151,41 +133,15 @@
                 
                 // 크레딧 잔액 가져오기
                 const creditBalance = parseInt(localStorage.getItem('creditBalance') || '0');
+                const creditDisplay = creditBalance > 0 ? `<span style="color: #FF9800; font-size: 14px; font-weight: 600; margin-right: 8px;">${creditBalance.toLocaleString()} 크레딧</span>` : '';
                 
-                // 크레딧 표시 (별도 요소로 분리)
-                const creditEl = document.createElement('span');
-                creditEl.style.cssText = 'color: #FF9800; font-size: 14px; font-weight: 600; margin-right: 16px; white-space: nowrap;';
-                creditEl.textContent = `${creditBalance.toLocaleString()} 크레딧`;
-                
-                // 사용자명 표시
-                userInfoEl.innerHTML = `<span style="color: #666; font-size: 14px;">${userName}님</span><i class="fas fa-chevron-down" style="margin-left: 6px; font-size: 10px; color: #666;"></i>`;
+                userInfoEl.innerHTML = `${creditDisplay}<span style="color: #333; font-size: 14px;">${userName}님</span><i class="fas fa-chevron-down" style="margin-left: 6px; font-size: 10px; color: #666;"></i>`;
                 userInfoEl.style.display = 'flex';
                 userInfoEl.style.alignItems = 'center';
                 userInfoEl.style.cursor = 'pointer';
-                userInfoEl.style.padding = '0';
-                userInfoEl.style.borderRadius = '0';
-                userInfoEl.style.transition = 'color 0.2s ease';
-                userInfoEl.style.whiteSpace = 'nowrap';
-                
-                // 번역기록 버튼 생성
-                const translationHistoryBtn = document.createElement('a');
-                translationHistoryBtn.href = getPagePath('storage.html');
-                translationHistoryBtn.className = 'translation-history-link';
-                translationHistoryBtn.textContent = '번역기록';
-                translationHistoryBtn.style.cssText = 'display: flex; align-items: center; padding: 0; margin-left: 16px; color: #666; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 0.2s ease; white-space: nowrap;';
-                translationHistoryBtn.onmouseover = function() { this.style.color = '#333'; };
-                translationHistoryBtn.onmouseout = function() { this.style.color = '#666'; };
-                
-                // 나의 작업 버튼 생성 (오른쪽에 표시)
-                const storageBtn = document.createElement('a');
-                storageBtn.href = getPagePath('storage.html');
-                storageBtn.className = 'my-work-link';
-                // 텍스트는 i18n.js의 updateNavBarLanguage에서 설정됨
-                // 초기값은 빈 문자열로 설정하고 i18n.js가 업데이트하도록 함
-                storageBtn.textContent = '';
-                storageBtn.style.cssText = 'display: flex; align-items: center; padding: 0; margin-left: 16px; color: #666; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 0.2s ease; white-space: nowrap;';
-                storageBtn.onmouseover = function() { this.style.color = '#333'; };
-                storageBtn.onmouseout = function() { this.style.color = '#666'; };
+                userInfoEl.style.padding = '8px 12px';
+                userInfoEl.style.borderRadius = '8px';
+                userInfoEl.style.transition = 'background 0.2s ease';
                 
                 // 크레딧 잔액 가져오기 (드롭다운용)
                 const creditBalanceForDropdown = parseInt(localStorage.getItem('creditBalance') || '0');
@@ -332,33 +288,27 @@
                 userInfoWrapper.appendChild(userInfoEl);
                 userInfoWrapper.appendChild(dropdown);
                 
-                // 로그인 버튼이 있으면 앞에 추가, 없으면 nav-right에 직접 추가
-                const navRight = document.querySelector('.nav-right');
-                if (navRight) {
-                    // 기존 요소 제거 (중복 방지 - 한 번 더 확인)
-                    const existingCreditEls = navRight.querySelectorAll('.credit-display');
-                    existingCreditEls.forEach(el => el.remove());
-                    const existingTranslationHistoryBtns = navRight.querySelectorAll('.translation-history-link');
-                    existingTranslationHistoryBtns.forEach(el => el.remove());
-                    const existingStorageBtns = navRight.querySelectorAll('.my-work-link');
-                    existingStorageBtns.forEach(el => el.remove());
-                    const existingUserInfoWrappers = navRight.querySelectorAll('.user-info-wrapper');
-                    existingUserInfoWrappers.forEach(el => el.remove());
-                    
-                    // loginBtn이 없거나 이미 제거된 경우를 대비
-                    const currentLoginBtn = navRight.querySelector('.login-btn');
-                    const insertBeforeTarget = currentLoginBtn || navRight.lastChild;
-                    
-                    // 순서대로 추가: 크레딧 -> 게스트님 -> 번역기록 -> 나의 작업 -> 그리드 아이콘
-                    creditEl.className = 'credit-display';
-                    navRight.insertBefore(creditEl, insertBeforeTarget);
-                    navRight.insertBefore(userInfoWrapper, insertBeforeTarget);
-                    navRight.insertBefore(translationHistoryBtn, insertBeforeTarget);
-                    navRight.insertBefore(storageBtn, insertBeforeTarget);
-                    
+                // 번역기록 버튼 생성
+                const translationHistoryBtn = document.createElement('a');
+                translationHistoryBtn.href = getPagePath('storage.html');
+                translationHistoryBtn.className = 'translation-history-link';
+                translationHistoryBtn.textContent = '번역기록';
+                translationHistoryBtn.style.cssText = 'display: flex; align-items: center; padding: 0; margin-left: 8px; color: #666; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 0.2s ease; white-space: nowrap;';
+                translationHistoryBtn.onmouseover = function() { this.style.color = '#333'; };
+                translationHistoryBtn.onmouseout = function() { this.style.color = '#666'; };
+                
+                // 로그인 버튼이 있으면 앞에 추가, 없으면 nav-right에 추가
+                if (loginBtn && loginBtn.parentNode) {
+                    loginBtn.parentNode.insertBefore(userInfoWrapper, loginBtn);
+                    loginBtn.parentNode.insertBefore(translationHistoryBtn, loginBtn);
                     // 로그인 버튼 숨기기 (드롭다운에 로그아웃이 있으므로)
-                    if (loginBtn) {
-                        loginBtn.style.display = 'none';
+                    loginBtn.style.display = 'none';
+                } else {
+                    // 로그인 버튼이 없으면 nav-right에 직접 추가
+                    const navRight = document.querySelector('.nav-right');
+                    if (navRight) {
+                        navRight.appendChild(userInfoWrapper);
+                        navRight.appendChild(translationHistoryBtn);
                     }
                 }
             }
@@ -368,11 +318,6 @@
                 planInfoBox.style.display = 'flex';
             }
         }
-        
-        // 실행 완료 후 플래그 해제
-        setTimeout(() => {
-            isUpdatingUserInfo = false;
-        }, 100);
     }
 
     // 가입하기 버튼 업데이트
