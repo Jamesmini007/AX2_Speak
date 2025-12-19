@@ -59,9 +59,9 @@ body {
     display: none !important;
 }
 
+/* 네비게이션 바 스타일 */
+
 /* 네비게이션 */
-/* 네비게이션 바 관련 CSS는 css/nav-bar.css로 이동되었습니다 */
-/*
 .glass-nav {
     position: fixed;
     top: 0;
@@ -200,6 +200,74 @@ body {
     gap: 0;
     position: relative;
     flex-shrink: 0;
+}
+
+/* 크레딧 표시 */
+.credit-display {
+    color: #FF9800;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 16px;
+    white-space: nowrap;
+}
+
+/* 사용자 정보 래퍼 */
+.user-info-wrapper {
+    position: relative;
+    margin-right: 0;
+}
+
+/* 사용자 정보 표시 */
+.user-info-display {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 0;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    color: #666;
+    font-size: 14px;
+}
+
+.user-info-display:hover {
+    color: #333;
+}
+
+/* 번역기록 링크 */
+.translation-history-link {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: 16px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.translation-history-link:hover {
+    color: #333;
+}
+
+/* 나의 작업 링크 */
+.my-work-link {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: 16px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.my-work-link:hover {
+    color: #333;
 }
 
 .plan-info {
@@ -1917,8 +1985,6 @@ body {
         font-size: 0.85rem;
     }
     
-    /* 네비게이션 바 관련 CSS는 css/nav-bar.css로 이동되었습니다 */
-    /*
     .logo {
         font-size: 20px;
     }
@@ -2202,8 +2268,6 @@ body {
 }
 
 /* 더보기 버튼 */
-/* 네비게이션 바 관련 CSS는 css/nav-bar.css로 이동되었습니다 */
-/*
 .more-menu-btn {
     width: 40px;
     height: 40px;
@@ -3365,73 +3429,6 @@ body {
 
 .language-option.active .fa-check {
     display: inline-block !important;
-}
-*/
-
-/* 모바일 반응형 - 메가 메뉴 */
-/* 네비게이션 바 관련 CSS는 css/nav-bar.css로 이동되었습니다 */
-/*
-@media (max-width: 900px) {
-    .more-menu-dropdown {
-        width: 95vw;
-        max-width: 750px;
-        right: -10px;
-    }
-    
-    .mega-menu-content {
-        flex-direction: column;
-        padding: 16px;
-        gap: 20px;
-    }
-    
-    .mega-menu-column {
-        padding: 0;
-        border-right: none;
-        border-bottom: 1px solid #f0f0f0;
-        padding-bottom: 16px;
-    }
-    
-    .mega-menu-column:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
-    .mega-menu-column.mega-menu-links {
-        flex: none;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    
-    .mega-menu-link {
-        flex: 0 0 calc(50% - 4px);
-    }
-    
-    .more-menu-btn {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .more-menu-btn .dots {
-        width: 16px;
-        height: 16px;
-        gap: 2px;
-    }
-    
-    .more-menu-btn .dot {
-        width: 3px;
-        height: 3px;
-    }
-    
-    /* 모바일에서 언어 드롭다운 메뉴 최적화 */
-    .language-dropdown-menu {
-        width: 180px;
-        padding: 16px;
-    }
-    
-    .more-menu-dropdown.expanded {
-        width: 460px;
-    }
 }
 
 /* 요금제 비교표 스타일 */
