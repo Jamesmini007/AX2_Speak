@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>포씨소프트 | 문의</title>
+    <meta name="description" content="AX2 실시간 언어 번역 서비스에 대한 문의사항을 남겨주세요. 고객 지원, 기술 지원, 비즈니스 문의 등을 받고 있습니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.4csoft.com/html/contact.html">
+    <meta property="og:title" content="포씨소프트 | 문의">
+    <meta property="og:description" content="AX2 실시간 언어 번역 서비스에 대한 문의사항을 남겨주세요. 고객 지원, 기술 지원, 비즈니스 문의 등을 받고 있습니다.">
+    <meta property="og:image" content="https://www.4csoft.com/assets/images/common/og-img.png">
+    <link rel="shortcut icon" href="https://www.4csoft.com/assets/images/common/favicon.ico">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 100px auto 60px;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 60px;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 문의 섹션 */
+        .contact-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .contact-section:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .contact-section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .contact-section-title i {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-section-title i.purple { background: linear-gradient(135deg, #FF9800, #E65100); }
+        .contact-section-title i.blue { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .contact-section-title i.green { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .contact-section-title i.orange { background: linear-gradient(135deg, #FFC400, #FF8F00); }
+        .contact-section-title i.teal { background: linear-gradient(135deg, #26A69A, #00897B); }
+        .contact-section-title i.indigo { background: linear-gradient(135deg, #5C6BC0, #3F51B5); }
+        .contact-section-title i.pink { background: linear-gradient(135deg, #FF6B9D, #E91E63); }
+
+        .contact-content {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .contact-content > p {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .contact-content ul {
+            margin: 20px 0;
+            padding-left: 28px;
+        }
+
+        .contact-content li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 8px;
+        }
+
+        .contact-content li::marker {
+            color: #FF9800;
+        }
+
+        .contact-content strong {
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        /* 문의 카드 그리드 */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .contact-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover .contact-card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .contact-card-icon.purple { background: linear-gradient(135deg, #FF9800, #E65100); }
+        .contact-card-icon.blue { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .contact-card-icon.green { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .contact-card-icon.orange { background: linear-gradient(135deg, #FFC400, #FF8F00); }
+        .contact-card-icon.teal { background: linear-gradient(135deg, #26A69A, #00897B); }
+        .contact-card-icon.indigo { background: linear-gradient(135deg, #5C6BC0, #3F51B5); }
+        .contact-card-icon.pink { background: linear-gradient(135deg, #FF6B9D, #E91E63); }
+
+        .contact-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .contact-card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .contact-card-email {
+            font-size: 15px;
+            color: #FF9800;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        /* 하이라이트 박스 */
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #FF9800;
+            padding: 20px 24px;
+            margin: 28px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .highlight-box.success {
+            border-left-color: #4CAF50;
+            background: #E8F5E9;
+        }
+
+        .highlight-box-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-box-content {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        /* 네비게이션 블러 제거 */
+        .glass-nav {
+            backdrop-filter: none !important;
+            background: rgba(255, 255, 255, 1) !important;
+        }
+
+        /* 배경 효과 제거 */
+        .background-effects {
+            display: none !important;
+        }
+
+        body {
+            background: #ffffff !important;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                margin: 80px auto 40px;
+                padding: 0 15px;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .page-subtitle {
+                font-size: 16px;
+                margin-bottom: 40px;
+            }
+
+            .contact-section {
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+
+            .contact-section-title {
+                font-size: 20px;
+            }
+
+            .contact-section-title i {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .contact-card {
+                padding: 24px;
+            }
+
+            .contact-card-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 플레이스홀더 -->
+    <div id="nav-placeholder"></div>
+
+    <!-- 메인 컨텐츠 -->
+    <div class="contact-container">
+        <h1 class="page-title">문의</h1>
+        <p class="page-subtitle">AX2 실시간 언어 번역 서비스에 대한 문의사항을 남겨주세요. 빠르고 친절하게 답변해드리겠습니다.</p>
+
+        <!-- 문의 유형 -->
+        <div class="contact-section">
+            <div class="contact-section-title">
+                <i class="fas fa-headset purple"></i>
+                <span>문의 유형</span>
+            </div>
+            <div class="contact-content">
+                <p>문의 유형에 따라 적절한 담당자에게 연결해드립니다.</p>
+                
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="contact-card-icon blue">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="contact-card-title">일반 문의</div>
+                        <div class="contact-card-desc">서비스 이용, 기능 문의, 사용법 안내 등 일반적인 문의사항</div>
+                        <div class="contact-card-email">support@ax2.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon green">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="contact-card-title">기술 지원</div>
+                        <div class="contact-card-desc">API, SDK, 통합 관련 기술적 문제나 개발 지원이 필요한 경우</div>
+                        <div class="contact-card-email">tech@ax2.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon orange">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="contact-card-title">비즈니스 문의</div>
+                        <div class="contact-card-desc">기업용 플랜, 대량 구매, 파트너십 등 비즈니스 관련 문의</div>
+                        <div class="contact-card-email">business@ax2.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon teal">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="contact-card-title">결제 및 환불</div>
+                        <div class="contact-card-desc">크레딧 구매, 결제 오류, 환불 신청 등 결제 관련 문의</div>
+                        <div class="contact-card-email">billing@ax2.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon indigo">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="contact-card-title">보안 및 개인정보</div>
+                        <div class="contact-card-desc">보안 관련 문의, 개인정보 처리 요청, 데이터 삭제 요청</div>
+                        <div class="contact-card-email">privacy@ax2.com</div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon pink">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div class="contact-card-title">법률 관련</div>
+                        <div class="contact-card-desc">이용약관, 저작권, 법적 고지 등 법률 관련 문의</div>
+                        <div class="contact-card-email">legal@ax2.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 응답 시간 -->
+        <div class="contact-section">
+            <div class="contact-section-title">
+                <i class="fas fa-clock green"></i>
+                <span>응답 시간</span>
+            </div>
+            <div class="contact-content">
+                <p>문의 유형에 따라 응답 시간이 다릅니다.</p>
+                
+                <ul>
+                    <li><strong>일반 문의:</strong> 영업일 기준 1-2일 이내</li>
+                    <li><strong>기술 지원:</strong> 영업일 기준 2-3일 이내</li>
+                    <li><strong>비즈니스 문의:</strong> 영업일 기준 3-5일 이내</li>
+                    <li><strong>결제 및 환불:</strong> 영업일 기준 1-2일 이내</li>
+                    <li><strong>보안 및 개인정보:</strong> 영업일 기준 3-5일 이내</li>
+                    <li><strong>법률 관련:</strong> 영업일 기준 3-5일 이내</li>
+                </ul>
+
+                <div class="highlight-box success">
+                    <div class="highlight-box-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span>긴급 문의</span>
+                    </div>
+                    <div class="highlight-box-content">
+                        긴급한 문제가 발생한 경우 이메일 제목에 "[긴급]"을 표시해주시면 우선적으로 처리해드립니다. 보안 관련 긴급 사항은 security@ax2.com으로 연락해주세요.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문의 시 포함할 정보 -->
+        <div class="contact-section">
+            <div class="contact-section-title">
+                <i class="fas fa-info-circle blue"></i>
+                <span>문의 시 포함할 정보</span>
+            </div>
+            <div class="contact-content">
+                <p>빠른 답변을 위해 문의 시 다음 정보를 포함해주시기 바랍니다.</p>
+                
+                <ul>
+                    <li><strong>계정 정보:</strong> 이메일 주소 (회원인 경우)</li>
+                    <li><strong>문제 설명:</strong> 발생한 문제나 문의사항에 대한 상세한 설명</li>
+                    <li><strong>재현 방법:</strong> 문제가 발생한 상황과 재현 방법 (기술 지원의 경우)</li>
+                    <li><strong>스크린샷:</strong> 문제가 발생한 화면의 스크린샷 (가능한 경우)</li>
+                    <li><strong>에러 메시지:</strong> 표시된 에러 메시지나 로그 (기술 지원의 경우)</li>
+                    <li><strong>기기 정보:</strong> 사용 중인 브라우저, 운영체제 정보 (기술 지원의 경우)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 자주 묻는 질문 -->
+        <div class="contact-section">
+            <div class="contact-section-title">
+                <i class="fas fa-question-circle orange"></i>
+                <span>자주 묻는 질문</span>
+            </div>
+            <div class="contact-content">
+                <p>문의하기 전에 자주 묻는 질문을 확인해보세요.</p>
+                
+                <ul>
+                    <li><strong>크레딧은 어떻게 사용되나요?</strong> → <a href="faq.html" style="color: #FF9800; text-decoration: underline;">FAQ 페이지</a>에서 확인하세요.</li>
+                    <li><strong>번역 세션은 어떻게 저장되나요?</strong> → <a href="faq.html" style="color: #FF9800; text-decoration: underline;">FAQ 페이지</a>에서 확인하세요.</li>
+                    <li><strong>환불 정책은 어떻게 되나요?</strong> → <a href="faq.html" style="color: #FF9800; text-decoration: underline;">FAQ 페이지</a>에서 확인하세요.</li>
+                    <li><strong>개인정보는 어떻게 보호되나요?</strong> → <a href="privacy.html" style="color: #FF9800; text-decoration: underline;">개인정보보호 페이지</a>에서 확인하세요.</li>
+                    <li><strong>서비스 이용약관은 어디서 확인하나요?</strong> → <a href="legal.html" style="color: #FF9800; text-decoration: underline;">법률 페이지</a>에서 확인하세요.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/nav-bar.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
+    <script src="../script.js" defer></script>
+</body>
+</html>
+
+
